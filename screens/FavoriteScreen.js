@@ -40,7 +40,7 @@ export default function FavoritesScreen({ navigation }) {
     {
       id: 1,
       name: "Chicken Republic Refuel",
-      image: "http://172.20.10.2/tiva/1.png",
+      image: "https://indulgetix.com/tiva/1.png",
       rating: 4.5,
       price: 8000,
       isVerified: true,
@@ -53,7 +53,7 @@ export default function FavoritesScreen({ navigation }) {
     {
       id: 2,
       name: "Urban Bites",
-      image: "http://172.20.10.2/tiva/2.png",
+      image: "https://indulgetix.com/tiva/2.png",
       rating: 4.5,
       price: 8000,
       isVerified: false,

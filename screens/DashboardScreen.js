@@ -212,7 +212,7 @@ const getStyles = (theme) =>
     },
     restaurantInfo: {
       padding: 12,
-      paddingBottom: 15,
+      paddingBottom: 10,
     },
     restaurantNameRow: {
       flexDirection: "row",
@@ -352,8 +352,7 @@ export default function HomeScreen({ navigation }) {
     acceptCall,
     callStatus,
   } = useCall();
- 
-  
+
   const toggleMenu = () => {
     const toValue = isMenuOpen ? -width : 0;
     const contentToValue = isMenuOpen ? 0 : width * 0.7;
@@ -559,29 +558,90 @@ export default function HomeScreen({ navigation }) {
                   </TouchableOpacity>
                 </View>
 
-                <View style={styles.foodCourtGrid}>
-                  {category.items &&
-                    category.items.slice(0, 4).map((restaurant) => (
+                {(index % 2 == 0 ) ? (
+                  <View style={styles.foodCourtGrid}>
+                    {category.items &&
+                      category.items.slice(0, 4).map((restaurant) => (
+                        <TouchableWithoutFeedback
+                          key={restaurant.id}
+                          onPress={() =>
+                            navigation.navigate("FoodDetails", restaurant)
+                          }
+                        >
+                          <View style={styles.foodCourtCard}>
+                            <TouchableOpacity style={styles.favoriteButton}>
+                              <Heart color="#fff" size={20} />
+                            </TouchableOpacity>
+                            <Image
+                              source={{ uri: restaurant.image }}
+                              style={styles.foodCourtImage}
+                            />
+                            <View style={styles.restaurantInfo}>
+                              <View style={styles.restaurantNameRow}>
+                                <Text style={styles.foodCourtName}>
+                                  {restaurant.name.length > 20
+                                    ? restaurant.name.slice(0, 20) + "..."
+                                    : restaurant.name}
+                                </Text>
+                                {restaurant.isVerified && (
+                                  <View style={styles.verifiedBadge}>
+                                    <Text style={styles.verifiedText}>✓</Text>
+                                  </View>
+                                )}
+                              </View>
+                              <View style={styles.deliveryInfo}>
+                                <Text style={styles.deliveryText}>
+                                  {restaurant.delivery.isFree
+                                    ? "Free delivery"
+                                    : "Paid delivery"}
+                                </Text>
+                                <Text style={styles.deliveryDot}>•</Text>
+                                <Text style={styles.deliveryText}>
+                                  {restaurant.delivery.time}
+                                </Text>
+                              </View>
+                              <View style={styles.bigpricetags}>
+                                <View style={styles.bigpricetag}>
+                                  <Text style={styles.bigpricetagText}>
+                                    {"₦"}
+                                    {restaurant.price &&
+                                      restaurant.price.toFixed(2)}
+                                  </Text>
+                                </View>
+                              </View>
+                            </View>
+                          </View>
+                        </TouchableWithoutFeedback>
+                      ))}
+                  </View>
+                ) : (
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {category.items &&
+                      category.items.slice(0, 10).map((restaurant) => (
                       <TouchableWithoutFeedback
                         key={restaurant.id}
                         onPress={() =>
                           navigation.navigate("FoodDetails", restaurant)
                         }
                       >
-                        <View style={styles.foodCourtCard}>
+                        <View style={styles.restaurantCard}>
+                          <View style={styles.ratingContainer}>
+                            <Text style={styles.rating}>
+                              {restaurant.rating}
+                            </Text>
+                            <Star fill="#FFD700" color="#FFD700" size={12} />
+                          </View>
                           <TouchableOpacity style={styles.favoriteButton}>
                             <Heart color="#fff" size={20} />
                           </TouchableOpacity>
                           <Image
                             source={{ uri: restaurant.image }}
-                            style={styles.foodCourtImage}
+                            style={styles.restaurantImage}
                           />
-                          <View style={styles.restaurantInfo}>
+                           <View style={styles.restaurantInfo}>
                             <View style={styles.restaurantNameRow}>
-                              <Text style={styles.foodCourtName}>
-                                {restaurant.name.length > 20
-                                  ? restaurant.name.slice(0, 20) + "..."
-                                  : restaurant.name}
+                              <Text style={styles.restaurantName}>
+                                {restaurant.name}
                               </Text>
                               {restaurant.isVerified && (
                                 <View style={styles.verifiedBadge}>
@@ -589,31 +649,41 @@ export default function HomeScreen({ navigation }) {
                                 </View>
                               )}
                             </View>
-                            <View style={styles.deliveryInfo}>
-                              <Text style={styles.deliveryText}>
-                                {restaurant.delivery.isFree
-                                  ? "Free delivery"
-                                  : "Paid delivery"}
-                              </Text>
-                              <Text style={styles.deliveryDot}>•</Text>
-                              <Text style={styles.deliveryText}>
-                                {restaurant.delivery.time}
-                              </Text>
-                            </View>
-                            <View style={styles.bigpricetags}>
-                              <View style={styles.bigpricetag}>
-                                <Text style={styles.bigpricetagText}>
+                            <Text style={styles.pricetagText}>
+                              {" "}
+                              {"₦"}
+                              {restaurant.price && restaurant.price.toFixed(2)}
+                              {" • "}
+                              {restaurant.delivery.isFree
+                                ? "Free delivery"
+                                : "Paid delivery"}
+                              {" • "}
+                              {restaurant.delivery.time}
+                            </Text>
+                            <View style={styles.mypricetags}>
+                              <View style={styles.mypricetag}>
+                                <Text style={styles.mypricetagText}>
+                                  {" "}
                                   {"₦"}
                                   {restaurant.price &&
                                     restaurant.price.toFixed(2)}
                                 </Text>
                               </View>
                             </View>
+
+                            <View style={styles.tags}>
+                              {restaurant.tags.map((tag, index) => (
+                                <View key={index} style={styles.tag}>
+                                  <Text style={styles.tagText}>{tag}</Text>
+                                </View>
+                              ))}
+                            </View>
                           </View>
                         </View>
                       </TouchableWithoutFeedback>
                     ))}
-                </View>
+                  </ScrollView>
+                )}
               </View>
             ))}
         </ScrollView>

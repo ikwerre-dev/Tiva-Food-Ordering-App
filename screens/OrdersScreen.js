@@ -28,7 +28,7 @@ const ordersData = [
     estimatedTime: 15,
     status: "ongoing",
     restaurantName: "Chicken Republic",
-    restaurantLogo: "http://172.20.10.2/tiva/1.png",
+    restaurantLogo: "https://indulgetix.com/tiva/1.png",
   },
   {
     id: "264101",
@@ -36,7 +36,7 @@ const ordersData = [
     estimatedTime: 20,
     status: "ongoing",
     restaurantName: "Pizza Hut",
-    restaurantLogo: "http://172.20.10.2/tiva/2.png",
+    restaurantLogo: "https://indulgetix.com/tiva/2.png",
   },
   {
     id: "264102",
@@ -44,7 +44,7 @@ const ordersData = [
     estimatedTime: 10,
     status: "delivered",
     restaurantName: "Burger King",
-    restaurantLogo: "http://172.20.10.2/tiva/3.png",
+    restaurantLogo: "https://indulgetix.com/tiva/3.png",
   },
   {
     id: "264101",
@@ -52,7 +52,7 @@ const ordersData = [
     estimatedTime: 20,
     status: "ongoing",
     restaurantName: "Pizza Hut",
-    restaurantLogo: "http://172.20.10.2/tiva/2.png",
+    restaurantLogo: "https://indulgetix.com/tiva/2.png",
   },
   {
     id: "264102",
@@ -60,7 +60,7 @@ const ordersData = [
     estimatedTime: 10,
     status: "delivered",
     restaurantName: "Burger King",
-    restaurantLogo: "http://172.20.10.2/tiva/3.png",
+    restaurantLogo: "https://indulgetix.com/tiva/3.png",
   },
 ];
 const OrderCard = ({
@@ -78,7 +78,7 @@ const OrderCard = ({
       <View style={styles.orderHeader}>
         <View style={styles.restaurantInfo}>
           <Image
-            source={{ uri: "http://172.20.10.2/tiva/1.png" }}
+            source={{ uri: "https://indulgetix.com/tiva/1.png" }}
             style={styles.restaurantLogo}
           />
           <View style={styles.orderDetails}>

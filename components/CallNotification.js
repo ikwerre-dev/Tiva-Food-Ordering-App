@@ -58,7 +58,6 @@ const CallNotification = () => {
   const navigation = useNavigation();
 
   const pickCall = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     acceptCall();
     navigation.navigate("CallScreen");
   };
