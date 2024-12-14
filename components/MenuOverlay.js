@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -14,28 +14,136 @@ import {
   MapPin,
   CreditCard,
   Sun,
+  Moon,
   Star,
   LogOut,
 } from 'lucide-react-native';
+import { useFonts } from 'expo-font';
+import {
+  Poppins_400Regular,
+  Poppins_700Bold,
+} from '@expo-google-fonts/poppins';
+import {
+  Livvic_400Regular,
+  Livvic_700Bold,
+} from '@expo-google-fonts/livvic';
+import AppLoading from 'expo-app-loading';
+import { ThemeContext } from '../context/AuthContext';
 
 const { width } = Dimensions.get('window');
 
-const MenuItem = ({ icon: Icon, title, onPress }) => (
-  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
-    <View style={styles.menuIconContainer}>
-      <Icon color="#fff" size={24} />
-    </View>
-    <Text style={styles.menuItemText}>{title}</Text>
-  </TouchableOpacity>
-);
+const getStyles = (theme) => StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: '70%',
+    backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
+    zIndex: 1000,
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
+  profileSection: {
+    alignItems: 'flex-start',
+    marginTop: 40,
+    marginBottom: 50,
+  },
+  profileImageContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: theme === 'light' ? '#F0F0F0' : '#121212',
+    padding: 1,
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 60,
+  },
+  profileName: {
+    color: theme === 'light' ? '#000000' : '#FFFFFF',
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    fontFamily: 'Livvic_700Bold',
+  },
+  profileEmail: {
+    color: '#666',
+    fontSize: 16,
+    fontFamily: 'Livvic_400Regular',
+  },
+  menuItems: {
+    flex: 1,
+    gap: 25,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuIconContainer: {
+    width: 40,
+    justifyContent: 'center',
+  },
+  menuItemText: {
+    fontSize: 18,
+    marginLeft: 15,
+    fontFamily: 'Livvic_400Regular'
+  },
+  logoutButton: {
+    marginBottom: 30,
+  },
+  logoutContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#DC2626',
+    padding: 16,
+    borderRadius: 30,
+    gap: 10,
+  },
+  logoutText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontFamily: 'Livvic_400Regular'
+  },
+});
 
 export default function MenuOverlay({ isOpen, onClose, translateX }) {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+  let [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_700Bold,
+    Livvic_400Regular,
+    Livvic_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
+  const styles = getStyles(theme);
+
+  const MenuItem = ({ icon: Icon, title, onPress, color }) => (
+    <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+      <View style={styles.menuIconContainer}>
+        <Icon color={color} size={24} />
+      </View>
+      <Text style={[styles.menuItemText, { color }]}>{title}</Text>
+    </TouchableOpacity>
+  );
+
   const menuItems = [
     { icon: ShoppingBag, title: 'My Orders' },
     { icon: User, title: 'My Profile' },
     { icon: MapPin, title: 'Delivery Address' },
     { icon: CreditCard, title: 'Payment Methods' },
-    { icon: Sun, title: 'Light Mode' },
+    { icon: theme === 'light' ? Moon : Sun, title: `${theme === 'light' ? 'Dark' : 'Light'} Mode`, onPress: toggleTheme },
     { icon: Star, title: 'Your Ratings' },
   ];
 
@@ -52,12 +160,12 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
             <Image
-              source={{ uri: 'https://placeholder.com/150x150' }}
+              source={{ uri: 'https://i.pravatar.cc/150?img=3' }}
               style={styles.profileImage}
             />
           </View>
-          <Text style={styles.profileName}>Jon Snow</Text>
-          <Text style={styles.profileEmail}>Jonsnow@gmail.com</Text>
+          <Text style={styles.profileName}>Robinson Honour</Text>
+          <Text style={styles.profileEmail}>investorhonour@gmail.com</Text>
         </View>
 
         <View style={styles.menuItems}>
@@ -66,14 +174,15 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
               key={index}
               icon={item.icon}
               title={item.title}
-              onPress={() => {}}
+              onPress={item.onPress || (() => {})}
+              color={theme === 'light' ? '#000000' : '#FFFFFF'}
             />
           ))}
         </View>
 
         <TouchableOpacity style={styles.logoutButton}>
           <View style={styles.logoutContent}>
-            <LogOut color="#fff" size={24} />
+            <LogOut color="#FFFFFF" size={24} />
             <Text style={styles.logoutText}>Log Out</Text>
           </View>
         </TouchableOpacity>
@@ -82,80 +191,3 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    width: '80%',
-    backgroundColor: '#000',
-    zIndex: 1000,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  profileSection: {
-    alignItems: 'center',
-    marginTop: 40,
-    marginBottom: 50,
-  },
-  profileImageContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#FFB800',
-    padding: 5,
-    marginBottom: 20,
-  },
-  profileImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 60,
-  },
-  profileName: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  profileEmail: {
-    color: '#666',
-    fontSize: 16,
-  },
-  menuItems: {
-    flex: 1,
-    gap: 25,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  menuIconContainer: {
-    width: 40,
-    justifyContent: 'center',
-  },
-  menuItemText: {
-    color: '#fff',
-    fontSize: 18,
-    marginLeft: 15,
-  },
-  logoutButton: {
-    marginBottom: 30,
-  },
-  logoutContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#DC2626',
-    padding: 16,
-    borderRadius: 30,
-    gap: 10,
-  },
-  logoutText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});

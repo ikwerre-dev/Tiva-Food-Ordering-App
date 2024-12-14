@@ -1,17 +1,22 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const ThemeContext = createContext();
 
 export const AuthContext = createContext();
 
-export default function AuthContextProvider({ children }) {
+export default function ContextProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    const loadUser = async () => {
+    const loadData = async () => {
       const storedUser = await AsyncStorage.getItem('user');
+      const storedTheme = await AsyncStorage.getItem('theme');
       if (storedUser) setUser(JSON.parse(storedUser));
+      if (storedTheme) setTheme(storedTheme);
     };
-    loadUser();
+    loadData();
   }, []);
 
   const login = async (userData) => {
@@ -24,9 +29,17 @@ export default function AuthContextProvider({ children }) {
     await AsyncStorage.removeItem('user');
   };
 
+  const toggleTheme = async () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    await AsyncStorage.setItem('theme', newTheme);
+  };
+
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        {children}
+      </ThemeContext.Provider>
     </AuthContext.Provider>
   );
 }

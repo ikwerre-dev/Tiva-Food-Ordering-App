@@ -92,12 +92,12 @@ export default function AppStack() {
       <Stack.Screen 
         name="FoodDetails" 
         component={FoodDetailsScreen}
-        options={{ title: '' }}
+        options={{headerShown: false, title: '' }}
       />
       <Stack.Screen 
         name="Reviews" 
         component={ReviewsScreen}
-        options={{ title: 'Reviews' }}
+        options={{headerShown: false, title: 'Reviews' }}
       />
     </Stack.Navigator>
   );
