@@ -169,6 +169,7 @@ export default function FoodDetailsScreen({ navigation, route }) {
               {item.delivery && item.delivery.time}
             </Text>
           </View>
+          <Text style={styles.description}>{item.description}</Text>
 
           <Text style={styles.price}>₦{item.price}</Text>
 

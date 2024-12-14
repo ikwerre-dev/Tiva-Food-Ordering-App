@@ -6,8 +6,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ImageBackground,
+  Linking,
+  ActivityIndicator
 } from "react-native";
-import { Bell, Check, ChevronLeft } from "lucide-react-native";
+import { Bell, Check, ChevronLeft, PhoneCall } from "lucide-react-native";
 import { useFonts } from "expo-font";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
 import AppLoading from "expo-app-loading";
@@ -26,9 +28,8 @@ const getStyles = (theme) => ({
     padding: 25,
     borderColor: theme === "light" ? "#EFEFEF" : "#222",
     borderWidth: 1,
-    borderRadius:20,
-    marginBottom:20
-    
+    borderRadius: 20,
+    marginBottom: 20,
   },
   header: {
     flexDirection: "row",
@@ -77,7 +78,7 @@ const getStyles = (theme) => ({
     color: theme === "light" ? "#666" : "#999",
   },
   stepsContainer: {
-    marginBottom: 24,
+    marginBottom: 0,
   },
   stepContainer: {
     marginBottom: 35,
@@ -144,8 +145,8 @@ const getStyles = (theme) => ({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 24,
-    marginTop: 14,
+    marginBottom: 0,
+    marginTop: 0,
   },
   statusLabel: {
     fontSize: 16,
@@ -172,6 +173,29 @@ const getStyles = (theme) => ({
     color: "#fff",
     fontSize: 16,
     fontFamily: "Livvic_700Bold",
+  },
+  callcontainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: "#B25E09",
+    borderRadius: 30,
+    width: 150,
+  },
+  buttonText: {
+    color: "#B25E09",
+    fontSize: 16,
+    marginLeft: 8,
+    fontWeight: "500",
   },
 });
 
@@ -230,7 +254,21 @@ const TrackOrderScreen = ({ navigation }) => {
   const { theme } = useContext(ThemeContext);
   const styles = getStyles(theme);
   const [orderStatus, setOrderStatus] = React.useState(3); // 0: none, 1: confirmed, 2: pickup, 3: in progress, 4: delivered
+  const [isLoading, setIsLoading] = React.useState(false);
 
+  const handlePhoneCall = async () => {
+    setIsLoading(true);
+    try {
+      await Linking.openURL('tel:+2349163169949');
+    } catch (error) {
+      console.error('Failed to make the call:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const riderId = 100;
+  
   let [fontsLoaded] = useFonts({
     Livvic_400Regular,
     Livvic_700Bold,
@@ -297,13 +335,16 @@ const TrackOrderScreen = ({ navigation }) => {
             </View>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Track Order</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Notification')} style={styles.iconButton}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Notification")}
+            style={styles.iconButton}
+          >
             <Bell color="#fff" size={24} />
           </TouchableOpacity>
         </View>
 
         <ScrollView style={styles.card}>
-          <View  style={styles.Borderedcard}>
+          <View style={styles.Borderedcard}>
             <Text style={[styles.cardTitle, styles.text]}>
               Track Your Order
             </Text>
@@ -324,23 +365,42 @@ const TrackOrderScreen = ({ navigation }) => {
                 />
               ))}
             </View>
-
-        
-          </View>
-          <View style={styles.statusContainer}>
-            <Text style={styles.statusLabel}>Status:</Text>
-            <View
-              style={[
-                styles.statusChip,
-                {
-                  backgroundColor: orderStatus === 4 ? "#22C55E" : "#FFA500",
-                },
-              ]}
-            >
-              <Text style={[styles.statusText, { color: "#101112" }]}>
-                {getStatusText()}
-              </Text>
+            <View style={styles.statusContainer}>
+              <Text style={styles.statusLabel}>Status:</Text>
+              <View
+                style={[
+                  styles.statusChip,
+                  {
+                    backgroundColor: orderStatus === 4 ? "#22C55E" : "#FFA500",
+                  },
+                ]}
+              >
+                <Text style={[styles.statusText, { color: "#101112" }]}>
+                  {getStatusText()}
+                </Text>
+              </View>
             </View>
+          </View>
+     
+          <View style={styles.callcontainer}>
+            <TouchableOpacity onPress={() => navigation.push("CallScreen", { riderId: riderId })} style={styles.button}>
+              <PhoneCall size={20} color="#A45C27" />
+              <Text style={styles.buttonText}>In app Call</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                 style={styles.button}
+                 onPress={handlePhoneCall}
+                 disabled={isLoading}
+               >
+                 {isLoading ? (
+                   <ActivityIndicator size="small" color="#A45C27" />
+                 ) : (
+                   <>
+                     <PhoneCall size={20} color="#A45C27" />
+                     <Text style={styles.buttonText}>Phone Call</Text>
+                   </>
+                 )}
+               </TouchableOpacity>
           </View>
           <TouchableOpacity
             style={styles.okayButton}

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Home, ShoppingBag, Heart, Compass } from "lucide-react-native";
+import { Home, ShoppingBag, Heart, Compass, Wallet } from "lucide-react-native";
 import { ThemeContext } from "../context/AuthContext";
 import * as Haptics from "expo-haptics";
 
@@ -21,6 +21,8 @@ import Profile from "../screens/ProfileScreen";
 import AddNewAddress from "../screens/DeliveryAddress";
 import PaymentMethod from "../screens/PaymentMethod";
 import NotificationScreen from "../screens/Notification";
+import CallScreen from "../screens/CallScreen";
+import WalletScreen from "../screens/WalletScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -120,6 +122,18 @@ function TabNavigator() {
                 </View>
               );
               break;
+            case "Wallet":
+              icon = (
+                <View style={styles.tabBarIcon}>
+                  <Wallet
+                    size={iconSize}
+                    color={
+                      focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"
+                    }
+                  />
+                </View>
+              );
+              break;
           }
           return icon;
         },
@@ -158,9 +172,18 @@ function TabNavigator() {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Favorites"
         component={FavoritesScreen}
+        options={{ headerShown: false }}
+        listeners={{
+          tabPress: () =>
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+        }}
+      /> */}
+      <Tab.Screen
+        name="Wallet"
+        component={WalletScreen}
         options={{ headerShown: false }}
         listeners={{
           tabPress: () =>
@@ -190,6 +213,11 @@ export default function AppStack() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="FoodDetails"
         component={FoodDetailsScreen}
         options={{ headerShown: false }}
@@ -213,7 +241,7 @@ export default function AppStack() {
         name="DeliveryAddress"
         component={AddNewAddress}
         options={{ headerShown: false }}
-      /> 
+      />
       <Stack.Screen
         name="PaymentMethods"
         component={PaymentMethod}
@@ -223,6 +251,11 @@ export default function AppStack() {
         name="Notification"
         component={NotificationScreen}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CallScreen"
+        component={CallScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>
   );

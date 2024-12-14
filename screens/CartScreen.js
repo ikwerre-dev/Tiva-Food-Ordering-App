@@ -25,7 +25,7 @@ import {
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
 
 export default function CartScreen({ navigation }) {
-  const { cart, removeFromCart } = useFoodContext();
+  const { cart, removeFromCart,clearCart } = useFoodContext();
   const { theme } = useContext(ThemeContext);
 
   const isDarkTheme = theme === "dark";
@@ -96,8 +96,8 @@ export default function CartScreen({ navigation }) {
 
   const handleConfirmCheckout = () => {
     setModalVisible(false);
-    // Navigate to Orders screen
-    navigation.navigate("Orders");
+    clearCart()
+    navigation.navigate("TrackOrder",2345);
   };
   const [noteForRestaurant, setNoteForRestaurant] = useState("");
 

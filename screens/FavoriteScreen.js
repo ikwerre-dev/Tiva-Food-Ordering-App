@@ -86,6 +86,7 @@ export default function FavoritesScreen({ navigation }) {
     },
     headerTitle: {
       fontSize: 20,
+      marginLeft: '-15',
       fontFamily: "Poppins_700Bold",
       color: isDarkTheme ? "#fff" : "#000",
     },
@@ -121,6 +122,7 @@ export default function FavoritesScreen({ navigation }) {
       marginHorizontal: 16,
       marginBottom: 16,
       overflow: "hidden",
+      
     },
     cardImage: {
       width: "100%",
@@ -129,6 +131,13 @@ export default function FavoritesScreen({ navigation }) {
     },
     cardContent: {
       padding: 16,
+      borderBottomWidth:1,
+      borderRightWidth:1,
+      borderLeftWidth:1,
+      borderBottomRightRadius: 12,
+      borderBottomLeftRadius: 12,
+      borderColor: theme === "light" ? "#EFEFEF" : "#222",
+      marginTop: 0
     },
     rating: {
       flexDirection: "row",
@@ -233,6 +242,13 @@ export default function FavoritesScreen({ navigation }) {
   return (
     <SafeAreaView style={dynamicStyles.container}>
       
+      <View style={dynamicStyles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <ChevronLeft color={theme === 'light' ? '#000' : '#fff'} size={24} />
+        </TouchableOpacity>
+        <Text style={dynamicStyles.headerTitle}>My Favorites</Text>
+        <Text></Text>
+      </View>
 
       <View style={dynamicStyles.tabs}>
         {["Food Items", "Resturents"].map((tab) => (

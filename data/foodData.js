@@ -4,6 +4,7 @@ export const featuredRestaurants = [
     name: "Chicken Republic Refuel",
     image: "http://172.20.10.2/tiva/1.png",
     rating: 4.5,
+    description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
     price: 8000,
     isVerified: true,
     delivery: {
@@ -17,6 +18,7 @@ export const featuredRestaurants = [
     name: "Urban Bites",
     image: "http://172.20.10.2/tiva/2.png",
     rating: 4.5,
+    description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
     price: 8000,
     isVerified: false,
     delivery: {
@@ -59,6 +61,7 @@ export const categories = [
         image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
+        description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
         price: 8000,
         isVerified: false,
         delivery: {
@@ -73,6 +76,7 @@ export const categories = [
         image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
+        description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
         price: 8000,
         isVerified: false,
         delivery: {
@@ -87,6 +91,7 @@ export const categories = [
         image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
+        description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
         price: 8000,
         isVerified: false,
         delivery: {
@@ -101,6 +106,7 @@ export const categories = [
         image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
+        description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
         price: 8000,
         isVerified: false,
         delivery: {
@@ -122,6 +128,7 @@ export const categories = [
         image: "http://172.20.10.2/tiva/2.png",
         isFavorite: false,
         rating: 4.5,
+        description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
         price: 8000,
         isVerified: true,
         delivery: {
@@ -136,6 +143,7 @@ export const categories = [
         image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
+        description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
         price: 8000,
         isVerified: true,
         delivery: {
@@ -150,6 +158,7 @@ export const categories = [
         image: "http://172.20.10.2/tiva/2.png",
         isFavorite: false,
         rating: 4.5,
+        description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
         price: 8000,
         isVerified: true,
         delivery: {
@@ -164,6 +173,7 @@ export const categories = [
         image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
+        description: 'Jollof Rice is one of the most beloved and flavorful dishes available for delivery on our platform! This iconic West African delicacy features perfectly cooked long-grain rice simmered in a rich, tomato-based sauce infused with aromatic spices. Each serving is a vibrant mix of savory, smoky, and slightly spicy flavors, making it the ultimate comfort food for any occasion.',
         price: 8000,
         isVerified: false,
         delivery: {
