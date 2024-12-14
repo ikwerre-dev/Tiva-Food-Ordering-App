@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "foodapp",
+    "name": "Tiva",
     "slug": "foodapp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -26,6 +26,11 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ecc008d3-e387-4d31-83e2-d157838497ba"
+      }
+    }
   }
 }
