@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Home, ShoppingBag, Heart, Compass } from "lucide-react-native";
 import { ThemeContext } from "../context/AuthContext";
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
 
 // Import screens
 import HomeScreen from "../screens/DashboardScreen";
@@ -18,6 +18,9 @@ import TrackOrderScreen from "../screens/TrackOrderScreen";
 import FavoritesScreen from "../screens/FavoriteScreen";
 import { useFoodContext } from "../context/FoodContext";
 import Profile from "../screens/ProfileScreen";
+import AddNewAddress from "../screens/DeliveryAddress";
+import PaymentMethod from "../screens/PaymentMethod";
+import NotificationScreen from "../screens/Notification";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -133,7 +136,8 @@ function TabNavigator() {
         component={HomeScreen}
         options={{ headerShown: false }}
         listeners={{
-          tabPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+          tabPress: () =>
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
         }}
       />
       <Tab.Screen
@@ -141,7 +145,8 @@ function TabNavigator() {
         component={CartScreen}
         options={{ headerShown: false }}
         listeners={{
-          tabPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+          tabPress: () =>
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
         }}
       />
       <Tab.Screen
@@ -149,7 +154,8 @@ function TabNavigator() {
         component={OrdersScreen}
         options={{ headerShown: false }}
         listeners={{
-          tabPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+          tabPress: () =>
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
         }}
       />
       <Tab.Screen
@@ -157,7 +163,8 @@ function TabNavigator() {
         component={FavoritesScreen}
         options={{ headerShown: false }}
         listeners={{
-          tabPress: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+          tabPress: () =>
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
         }}
       />
     </Tab.Navigator>
@@ -202,7 +209,21 @@ export default function AppStack() {
         component={Profile}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="DeliveryAddress"
+        component={AddNewAddress}
+        options={{ headerShown: false }}
+      /> 
+      <Stack.Screen
+        name="PaymentMethods"
+        component={PaymentMethod}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Notification"
+        component={NotificationScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
-

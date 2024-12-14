@@ -297,7 +297,7 @@ const TrackOrderScreen = ({ navigation }) => {
             </View>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Track Order</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Notification')} style={styles.iconButton}>
             <Bell color="#fff" size={24} />
           </TouchableOpacity>
         </View>

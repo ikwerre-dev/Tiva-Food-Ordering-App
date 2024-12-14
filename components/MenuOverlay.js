@@ -17,6 +17,7 @@ import {
   Moon,
   Star,
   LogOut,
+  Bell,
 } from 'lucide-react-native';
 import { useFonts } from 'expo-font';
 import {
@@ -151,13 +152,11 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
     { icon: MapPin, title: 'Delivery Address', screen: 'DeliveryAddress' },
     { icon: CreditCard, title: 'Payment Methods', screen: 'PaymentMethods' },
     { icon: theme === 'light' ? Moon : Sun, title: `${theme === 'light' ? 'Dark' : 'Light'} Mode`, onPress: toggleTheme },
-    { icon: Star, title: 'Your Ratings', screen: 'Ratings' },
+    { icon: Bell, title: 'Notification', screen: 'Notification' },
   ];
 
   const handleLogout = () => {
-    // Implement logout logic here
     onClose();
-    // Navigate to login screen or perform other logout actions
     navigation.navigate('Login');
   };
 

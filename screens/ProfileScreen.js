@@ -1,5 +1,16 @@
 import React, { useContext } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { 
+  View, 
+  Text, 
+  Image, 
+  TextInput, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Dimensions,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native';
 import { ChevronLeft, Camera } from 'lucide-react-native';
 import { ThemeContext } from '../context/AuthContext';
 import { useFonts, Livvic_400Regular, Livvic_700Bold } from '@expo-google-fonts/livvic';
@@ -22,59 +33,69 @@ const Profile = ({ navigation }) => {
   const styles = getStyles(theme);
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <Image
         source={require('../assets/profilebanner.png')}
         style={styles.bannerImage}
       />
-      <TouchableOpacity onPress={() => navigation.goBack()}  style={styles.backButton}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <ChevronLeft color={'#fff'} size={24} />
       </TouchableOpacity>
       
-      <View style={styles.profileContent}>
-        <View style={styles.profileImageContainer}>
-          <Image
-            source={{ uri: 'https://i.pravatar.cc/150?img=3' }}
-            style={styles.profileImage}
-          />
-          <TouchableOpacity style={styles.cameraButton}>
-            <Camera color="#fff" size={20} />
-          </TouchableOpacity>
-        </View>
-        
-        <Text style={styles.name}>Robinson Honour</Text>
-        <Text style={styles.editProfile}>Edit Profile</Text>
-        
-        <View style={styles.form}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Full name</Text>
-            <TextInput 
-              style={styles.input}
-              value="Robinson Honour"
-              placeholderTextColor={theme === 'light' ? '#666' : '#888'}
+      <ScrollView 
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.profileContent}>
+          <View style={styles.profileImageContainer}>
+            <Image
+              source={{ uri: 'https://i.pravatar.cc/150?img=3' }}
+              style={styles.profileImage}
             />
+            <TouchableOpacity style={styles.cameraButton}>
+              <Camera color="#fff" size={20} />
+            </TouchableOpacity>
           </View>
           
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>E-mail</Text>
-            <TextInput 
-              style={styles.input}
-              value="robinsonhonour@gmail.com"
-              placeholderTextColor={theme === 'light' ? '#666' : '#888'}
-            />
-          </View>
+          <Text style={styles.name}>Robinson Honour</Text>
+          <Text style={styles.editProfile}>Edit Profile</Text>
           
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Phone Number</Text>
-            <TextInput 
-              style={styles.input}
-              value="+2349163169949"
-              placeholderTextColor={theme === 'light' ? '#666' : '#888'}
-            />
+          <View style={styles.form}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Full name</Text>
+              <TextInput 
+                style={styles.input}
+                value="Robinson Honour"
+                placeholderTextColor={theme === 'light' ? '#666' : '#888'}
+              />
+            </View>
+            
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>E-mail</Text>
+              <TextInput 
+                style={styles.input}
+                value="robinsonhonour@gmail.com"
+                placeholderTextColor={theme === 'light' ? '#666' : '#888'}
+                keyboardType="email-address"
+              />
+            </View>
+            
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Phone Number</Text>
+              <TextInput 
+                style={styles.input}
+                value="+2349163169949"
+                placeholderTextColor={theme === 'light' ? '#666' : '#888'}
+                keyboardType="phone-pad"
+              />
+            </View>
           </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -82,6 +103,10 @@ const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme === 'light' ? '#FFFFFF' : '#101112',
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 30, // Add some bottom padding for scrolling
   },
   bannerImage: {
     width: width,
@@ -157,7 +182,7 @@ const getStyles = (theme) => StyleSheet.create({
     borderRadius: 8,
     padding: 18,
     fontSize: 16,
-    paddingVertical:18,
+    paddingVertical: 18,
     fontFamily: 'Livvic_400Regular',
     color: theme === 'light' ? '#000' : '#fff',
     backgroundColor: theme === 'light' ? '#fff' : '#1A1B1E',

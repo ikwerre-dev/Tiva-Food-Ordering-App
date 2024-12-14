@@ -106,17 +106,17 @@ export default function CartScreen({ navigation }) {
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => {
         setKeyboardVisible(true);
         scrollViewRef.current?.scrollToEnd({ animated: true });
-      }
+      },
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => {
         setKeyboardVisible(false);
-      }
+      },
     );
 
     return () => {
@@ -134,7 +134,7 @@ export default function CartScreen({ navigation }) {
         onRequestClose={() => setModalVisible(false)}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <KeyboardAvoidingView 
+          <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.modalContainer}
           >
@@ -299,6 +299,13 @@ export default function CartScreen({ navigation }) {
                 <Text style={[styles.paymentOptionText, dynamicStyles.text]}>
                   Card
                 </Text>
+                <View
+                  style={[
+                    styles.circle,
+                    paymentMethod === "card" ? styles.selectedOption : null,
+                    paymentMethod === "card" ? {backgroundColor: '#DC2626'} : null,
+                  ]}
+                ></View>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
@@ -311,32 +318,40 @@ export default function CartScreen({ navigation }) {
                 <Text style={[styles.paymentOptionText, dynamicStyles.text]}>
                   Wallet
                 </Text>
+                <View
+                  style={[
+                    styles.circle,
+                    paymentMethod === "wallet" ? styles.selectedOption : null,
+                    paymentMethod === "wallet" ? {backgroundColor: '#DC2626'} : null,
+                    
+                  ]}
+                ></View>
               </TouchableOpacity>
             </View>
           </>
         ) : (
           <View style={styles.emptyCartContainer}>
-             <Image
-               source={require("../assets/cart.png")}
-               style={styles.emptyCartImage}
-             />
-             <Text style={[styles.emptyCartText, dynamicStyles.text]}>
-               Your Cart is Empty
-             </Text>
-             
-           </View>
+            <Image
+              source={require("../assets/cart.png")}
+              style={styles.emptyCartImage}
+            />
+            <Text style={[styles.emptyCartText, dynamicStyles.text]}>
+              Your Cart is Empty
+            </Text>
+          </View>
         )}
       </ScrollView>
 
-      {totalitems > 0 && <View style={styles.footer}>
-        <TouchableOpacity
-          style={dynamicStyles.checkoutButton}
-          onPress={handleCheckout}
-        >
-          <Text style={[styles.checkoutButtonText]}>CHECKOUT</Text>
-        </TouchableOpacity>
-      </View>
-      }
+      {totalitems > 0 && (
+        <View style={styles.footer}>
+          <TouchableOpacity
+            style={dynamicStyles.checkoutButton}
+            onPress={handleCheckout}
+          >
+            <Text style={[styles.checkoutButtonText]}>CHECKOUT</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       {renderModal()}
     </SafeAreaView>
   );
@@ -347,13 +362,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#101112",
   },
+  circle: {
+    width: 20,
+    height: 20,
+    borderRadius: 50,
+    borderWidth: 1,
+  },
   emptyCartContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    height: '100%',
-    
+    height: "100%",
   },
   emptyCartImage: {
     width: 150,
@@ -403,21 +423,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#666",
   },
-  paymentOptions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
+  
   paymentOption: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderWidth: 1,
+    
+    borderWidth: 2,
     borderColor: "#ccc",
     borderRadius: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
   },
   selectedOption: {
     borderColor: "#DC2626",
-    borderWidth: 0.5,
+    borderWidth: 1,
     color: "#fff",
   },
   paymentOptionText: {
@@ -546,11 +566,7 @@ const styles = StyleSheet.create({
   paymentMethod: {
     marginBottom: 30,
   },
-  paymentOption: {
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
-  },
+ 
   paymentOptionText: {},
   footer: {
     padding: 20,
@@ -583,7 +599,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   footerWithKeyboard: {
-    marginBottom: Platform.OS === 'ios' ? 20 : 0, // Adjust this value as needed
+    marginBottom: Platform.OS === "ios" ? 20 : 0, // Adjust this value as needed
   },
   modalTitle: {
     fontSize: 18,

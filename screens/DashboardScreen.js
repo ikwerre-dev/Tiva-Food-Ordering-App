@@ -432,7 +432,7 @@ export default function HomeScreen({ navigation }) {
               <Sun color={theme === "light" ? "#000" : "#fff"} size={24} />
                }
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity onPress={() => navigation.navigate('Notification')} style={styles.iconButton}>
               <Bell color={theme === "light" ? "#000" : "#fff"} size={24} />
             </TouchableOpacity>
           </View>
