@@ -295,12 +295,14 @@ const getStyles = (theme) =>
       width: '100%',
       flexDirection: 'row',
       justifyContent:'center',
-      paddingVertical: 4,
-      borderRadius: 4,
+      paddingVertical: 8,
+      borderRadius: 9,
     },
     bigpricetagText: {
       color: "#fff",
-      fontSize: 12,
+      fontSize: 15, 
+      fontFamily: "Livvic_700Bold",
+      
     },
     foodCourtGrid: {
       flexDirection: "row",

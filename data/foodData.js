@@ -2,7 +2,7 @@ export const featuredRestaurants = [
   {
     id: 1,
     name: "Chicken Republic Refuel",
-    image: "http://192.168.1.115/tiva/1.png",
+    image: "http://172.20.10.2/tiva/1.png",
     rating: 4.5,
     price: 8000,
     isVerified: true,
@@ -15,7 +15,7 @@ export const featuredRestaurants = [
   {
     id: 2,
     name: "Urban Bites",
-    image: "http://192.168.1.115/tiva/2.png",
+    image: "http://172.20.10.2/tiva/2.png",
     rating: 4.5,
     price: 8000,
     isVerified: false,
@@ -35,13 +35,13 @@ export const foodCourt = [
   {
     id: 1,
     name: "Quarter Rotisserie",
-    image: "http://192.168.1.115/tiva/1.png",
+    image: "http://172.20.10.2/tiva/1.png",
     isFavorite: false
   },
   {
     id: 2,
     name: "5-REFUEL-DODO-ME",
-    image: "http://192.168.1.115/tiva/1.png",
+    image: "http://172.20.10.2/tiva/1.png",
     isFavorite: false
   }
 ];
@@ -56,7 +56,7 @@ export const categories = [
       {
         id: 1,
         name: "Quarter Rotisserie",
-        image: "http://192.168.1.115/tiva/1.png",
+        image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
         price: 8000,
@@ -70,7 +70,7 @@ export const categories = [
       {
         id: 2,
         name: "5-REFUEL-DODO-ME",
-        image: "http://192.168.1.115/tiva/1.png",
+        image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
         price: 8000,
@@ -84,7 +84,7 @@ export const categories = [
       {
         id: 3,
         name: "Quarter Rotisserie",
-        image: "http://192.168.1.115/tiva/1.png",
+        image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
         price: 8000,
@@ -98,7 +98,7 @@ export const categories = [
       {
         id: 4,
         name: "5-REFUEL-DODO-ME",
-        image: "http://192.168.1.115/tiva/1.png",
+        image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
         price: 8000,
@@ -119,7 +119,7 @@ export const categories = [
       {
         id: 1,
         name: "Garri Sharwama",
-        image: "http://192.168.1.115/tiva/2.png",
+        image: "http://172.20.10.2/tiva/2.png",
         isFavorite: false,
         rating: 4.5,
         price: 8000,
@@ -133,7 +133,7 @@ export const categories = [
       {
         id: 2,
         name: "Eba Fillet",
-        image: "http://192.168.1.115/tiva/1.png",
+        image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
         price: 8000,
@@ -147,7 +147,7 @@ export const categories = [
       {
         id: 3,
         name: "Garri Sharwama",
-        image: "http://192.168.1.115/tiva/2.png",
+        image: "http://172.20.10.2/tiva/2.png",
         isFavorite: false,
         rating: 4.5,
         price: 8000,
@@ -161,7 +161,7 @@ export const categories = [
       {
         id: 4,
         name: "Eba Fillet Eba Fillet Eba Fillet Eba Fillet",
-        image: "http://192.168.1.115/tiva/1.png",
+        image: "http://172.20.10.2/tiva/1.png",
         isFavorite: false,
         rating: 4.5,
         price: 8000,

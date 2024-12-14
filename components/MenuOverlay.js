@@ -29,6 +29,7 @@ import {
 } from '@expo-google-fonts/livvic';
 import AppLoading from 'expo-app-loading';
 import { ThemeContext } from '../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -115,6 +116,7 @@ const getStyles = (theme) => StyleSheet.create({
 
 export default function MenuOverlay({ isOpen, onClose, translateX }) {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const navigation = useNavigation();
 
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
@@ -129,6 +131,11 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
 
   const styles = getStyles(theme);
 
+  const handleNavigation = (screenName) => {
+    onClose();
+    navigation.navigate(screenName);
+  };
+
   const MenuItem = ({ icon: Icon, title, onPress, color }) => (
     <TouchableOpacity style={styles.menuItem} onPress={onPress}>
       <View style={styles.menuIconContainer}>
@@ -139,13 +146,20 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
   );
 
   const menuItems = [
-    { icon: ShoppingBag, title: 'My Orders' },
-    { icon: User, title: 'My Profile' },
-    { icon: MapPin, title: 'Delivery Address' },
-    { icon: CreditCard, title: 'Payment Methods' },
+    { icon: ShoppingBag, title: 'My Orders', screen: 'Orders' },
+    { icon: User, title: 'My Profile', screen: 'Profile' },
+    { icon: MapPin, title: 'Delivery Address', screen: 'DeliveryAddress' },
+    { icon: CreditCard, title: 'Payment Methods', screen: 'PaymentMethods' },
     { icon: theme === 'light' ? Moon : Sun, title: `${theme === 'light' ? 'Dark' : 'Light'} Mode`, onPress: toggleTheme },
-    { icon: Star, title: 'Your Ratings' },
+    { icon: Star, title: 'Your Ratings', screen: 'Ratings' },
   ];
+
+  const handleLogout = () => {
+    // Implement logout logic here
+    onClose();
+    // Navigate to login screen or perform other logout actions
+    navigation.navigate('Login');
+  };
 
   return (
     <Animated.View 
@@ -174,13 +188,13 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
               key={index}
               icon={item.icon}
               title={item.title}
-              onPress={item.onPress || (() => {})}
+              onPress={item.onPress || (() => handleNavigation(item.screen))}
               color={theme === 'light' ? '#000000' : '#FFFFFF'}
             />
           ))}
         </View>
 
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <View style={styles.logoutContent}>
             <LogOut color="#FFFFFF" size={24} />
             <Text style={styles.logoutText}>Log Out</Text>
