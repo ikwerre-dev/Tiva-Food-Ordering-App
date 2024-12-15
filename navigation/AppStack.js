@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Platform } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Home, ShoppingBag, Heart, Compass, Wallet } from "lucide-react-native";
@@ -37,8 +37,8 @@ function TabNavigator() {
     tabBar: {
       backgroundColor: isDarkTheme ? "#1A1A1A" : "#FFFFFF",
       borderTopWidth: 0,
-      height: 90, // Increased from 65 to 80
-      paddingBottom: 15, // Increased from 10 to 15
+      height: Platform.OS === "android" ? 60 : 90, // Dynamic height for Android and iPhone
+      paddingBottom: Platform.OS === "android" ? 10 : 20, // Adjust padding for consistency
       paddingHorizontal: 20,
     },
     tabBarBadge: {

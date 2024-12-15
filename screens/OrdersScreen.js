@@ -15,7 +15,7 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
-import AppLoading from "expo-app-loading";
+import AppLoading from '../components/Loader';
 import { ThemeContext } from "../context/AuthContext";
 import { ScrollView } from "react-native";
 

@@ -14,7 +14,8 @@ import {
 import { ChevronLeft, Camera } from 'lucide-react-native';
 import { ThemeContext } from '../context/AuthContext';
 import { useFonts, Livvic_400Regular, Livvic_700Bold } from '@expo-google-fonts/livvic';
-import AppLoading from 'expo-app-loading';
+import AppLoading from '../components/Loader';
+
 
 const { width } = Dimensions.get('window');
 

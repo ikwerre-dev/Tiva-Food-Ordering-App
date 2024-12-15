@@ -9,6 +9,7 @@ import {
   Animated,
   Platform,
   PanResponder,
+  Dimensions,
 } from "react-native";
 import {
   ChevronLeft,
@@ -33,7 +34,8 @@ export default function FoodDetailsScreen({ navigation, route }) {
   const restaurant = route.params;
   const [item, setItem] = useState(null);
   const [textHidden, settextHidden] = useState(false);
-  
+  const { width } = Dimensions.get("window");
+
   const scrollY = useRef(new Animated.Value(0)).current;
   const swipeAnim = useRef(new Animated.Value(0)).current;
   const dragOpacity = useRef(new Animated.Value(0)).current;
@@ -120,7 +122,7 @@ export default function FoodDetailsScreen({ navigation, route }) {
     extrapolate: "clamp",
   });
 
-  const styles = getStyles(theme);
+  const styles = getStyles(theme,width);
 
   if (!item) {
     return <Text style={styles.loadingText}>Loading...</Text>;
@@ -231,7 +233,7 @@ export default function FoodDetailsScreen({ navigation, route }) {
                 {
                   translateX: swipeAnim.interpolate({
                     inputRange: [0, 200],
-                    outputRange: [0, 180],
+                    outputRange: [0, width*0.42],
                     extrapolate: "clamp",
                   }),
                 },
@@ -252,7 +254,7 @@ export default function FoodDetailsScreen({ navigation, route }) {
   );
 }
 
-const getStyles = (theme) =>
+const getStyles = (theme,width) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -366,12 +368,12 @@ const getStyles = (theme) =>
       padding: 20,
       borderTopWidth: 1,
       paddingBottom: 50,
-      paddingHorizontal: 70,
+      paddingHorizontal: width * 0.2,
       borderTopColor: theme === "light" ? "#E0E0E0" : "#2A2A2A",
-    },
+    }, 
     swipeButton: {
       position: "absolute",
-      left: 80,
+      left: width * 0.22,
       bottom: 60,
       width: 50,
       height: 50,
@@ -391,7 +393,7 @@ const getStyles = (theme) =>
     },
     swipeText: {
       color: "#fff",
-      fontSize: 16,
+      fontSize: width < 400 ? 13 : 15,
       fontWeight: "bold",
       paddingRight: 15,
     },

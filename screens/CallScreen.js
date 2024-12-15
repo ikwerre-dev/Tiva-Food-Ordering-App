@@ -143,22 +143,12 @@ const Call = ({ navigation }) => {
               <TouchableOpacity style={styles.controlButton}>
                 <Pause color={iconColor} size={iconSize} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.controlButton}>
-                <Menu color={iconColor} size={iconSize} />
-              </TouchableOpacity>
-            </View>
-            
-            <View style={styles.row}>
-              <TouchableOpacity style={styles.controlButton}>
-                <Video color={iconColor} size={iconSize} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.controlButton}>
-                <UserPlus color={iconColor} size={iconSize} />
-              </TouchableOpacity>
+              
               <TouchableOpacity style={styles.controlButton}>
                 <Mic color={iconColor} size={iconSize} />
               </TouchableOpacity>
             </View>
+             
           </View>
         )}
         

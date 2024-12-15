@@ -1,21 +1,22 @@
 {
-  "cli": {
-    "version": ">= 14.1.0",
-    "appVersionSource": "remote"
-  },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+    "internal": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "app-bundle"  
+      }
     },
-    "preview": {
-      "distribution": "internal"
+    "development": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "app-bundle"  
+      }
     },
     "production": {
-      "autoIncrement": true
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle" 
+      }
     }
-  },
-  "submit": {
-    "production": {}
   }
 }

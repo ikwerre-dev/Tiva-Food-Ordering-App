@@ -23,6 +23,7 @@ const Transaction = ({ title, date, amount }) => {
       alignItems: 'center',
       paddingVertical: 15,
       borderBottomWidth: 1,
+      paddingBottom:50,
       borderBottomColor: theme === 'light' ? '#eee' : '#333',
     },
     transactionTitle: {

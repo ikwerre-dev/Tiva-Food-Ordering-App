@@ -26,7 +26,7 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
-import AppLoading from "expo-app-loading";
+import AppLoading from '../components/Loader';
 import { AuthContext, ThemeContext } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { ScrollView } from "react-native";
@@ -47,6 +47,8 @@ const getStyles = (theme) =>
     content: {
       flex: 1,
       padding: 20,
+      flexDirection: 'column',
+      justifyContent: 'space-between'
     },
     profileSection: {
       alignItems: "flex-start",
@@ -54,8 +56,8 @@ const getStyles = (theme) =>
       marginBottom: 50,
     },
     profileImageContainer: {
-      width: 120,
-      height: 120,
+      width: 80,
+      height: 80,
       borderRadius: 60,
       backgroundColor: theme === "light" ? "#F0F0F0" : "#121212",
       padding: 1,

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Tiva",
+    "name": "foodapp",
     "slug": "foodapp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.codewithhonour.foodapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

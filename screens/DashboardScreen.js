@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   Animated,
   Dimensions,
+  Platform
 } from "react-native";
 import {
   Bell,
@@ -34,7 +35,7 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
-import AppLoading from "expo-app-loading";
+import AppLoading from '../components/Loader';
 import { ThemeContext } from "../context/AuthContext";
 import { useCall } from "../context/CallContext";
 
@@ -44,6 +45,8 @@ const getStyles = (theme) =>
   StyleSheet.create({
     safeArea: {
       flex: 1,
+      paddingTop:  Platform.OS === "android" ?  25 : 5,
+      
       backgroundColor: theme === "light" ? "#FFFFFF" : "#101112",
     },
     container: {
@@ -151,7 +154,7 @@ const getStyles = (theme) =>
     searchInput: {
       flex: 1,
       color: "#fff",
-      padding: 20,
+      padding:  Platform.OS === "android" ?  5 : 20,
       fontSize: 17,
       fontFamily: "Livvic_400Regular",
     },
@@ -464,7 +467,7 @@ export default function HomeScreen({ navigation }) {
               <Search color="#666" size={20} />
               <TextInput
                 style={styles.searchInput}
-                placeholder="Find or food or restaurant..."
+                placeholder="Find food or restaurant..."
                 placeholderTextColor="#666"
               />
             </View>

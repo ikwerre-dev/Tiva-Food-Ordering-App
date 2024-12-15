@@ -12,7 +12,7 @@ import {
 import { Bell, Check, ChevronLeft, PhoneCall } from "lucide-react-native";
 import { useFonts } from "expo-font";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
-import AppLoading from "expo-app-loading";
+import AppLoading from '../components/Loader';
 import { ThemeContext } from "../context/AuthContext";
 import { ScrollView } from "react-native";
 
@@ -58,6 +58,7 @@ const getStyles = (theme) => ({
         ? "rgba(255, 255, 255, 1.95)"
         : "rgba(16, 17, 18, 1.95)",
     height: "100%",
+    
   },
   cardTitle: {
     fontSize: 20,
@@ -168,6 +169,7 @@ const getStyles = (theme) => ({
     paddingVertical: 16,
     borderRadius: 25,
     alignItems: "center",
+    marginBottom:50
   },
   okayButtonText: {
     color: "#fff",

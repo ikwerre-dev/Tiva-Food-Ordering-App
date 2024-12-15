@@ -18,6 +18,8 @@ import { useFoodContext } from "../context/FoodContext";
 import { ThemeContext } from "../context/AuthContext";
 import { SafeAreaView } from "react-native";
 import { useFonts } from "expo-font";
+import AppLoading from '../components/Loader';
+
 import {
   Poppins_400Regular,
   Poppins_700Bold,
