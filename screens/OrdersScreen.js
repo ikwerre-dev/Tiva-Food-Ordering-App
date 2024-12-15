@@ -255,7 +255,8 @@ const getStyles = (theme) =>
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 3,
-      marginBottom:15
+      marginBottom:10,
+      marginTop:10,
     },
     orderHeader: {
       flexDirection: "row",

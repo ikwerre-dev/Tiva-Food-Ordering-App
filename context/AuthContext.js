@@ -1,6 +1,15 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  ImageBackground,
+  StatusBar,
+  FlatList,
+} from 'react-native';
 export const ThemeContext = createContext();
 
 export const AuthContext = createContext();
@@ -38,6 +47,8 @@ export default function ContextProvider({ children }) {
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <StatusBar showHideTransition={true} hidden barStyle="light-content" />
+        
         {children}
       </ThemeContext.Provider>
     </AuthContext.Provider>

@@ -80,7 +80,7 @@ const OnboardingScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar showHideTransition={true} hidden barStyle="light-content" />
       <FlatList
         ref={slidesRef}
         data={slides}
