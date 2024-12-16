@@ -44,8 +44,8 @@ const OnboardingScreen = ({ navigation }) => {
       slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
       // Navigate to the next screen
-      console.log('Get Started');
-      navigation.navigate('Login')
+      // console.log('Get Started');
+      navigation.push('Login')
     }
   };
 
