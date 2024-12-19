@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "developmentClient": true,
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -28,11 +29,13 @@
     "plugins": [
       "expo-font"
     ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "extra": {
       "eas": {
-        "projectId": "ecc008d3-e387-4d31-83e2-d157838497ba"
+        "projectId": "b25c5782-50a9-4af9-ac28-e0bd22e77049"
       }
-    },
-    "assetBundlePatterns": ["**/*"]
+    }
   }
 }

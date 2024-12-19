@@ -48,7 +48,6 @@ export default function ContextProvider({ children }) {
     <AuthContext.Provider value={{ user, login, logout }}>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>
         <StatusBar showHideTransition={true} hidden barStyle="light-content" />
-        
         {children}
       </ThemeContext.Provider>
     </AuthContext.Provider>

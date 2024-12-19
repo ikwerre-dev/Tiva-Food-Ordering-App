@@ -7,29 +7,40 @@ import AppStack from "./navigation/AppStack";
 import { FoodProvider } from "./context/FoodContext";
 import { CallProvider } from "./context/CallContext";
 import CallNotification from "./components/CallNotification";
+import 'react-native-gesture-handler';
 
 Sentry.init({
-  dsn: "https://0c3d4d891d85b9e78f8694d9f33ec89a@o4508121170116608.ingest.us.sentry.io/4508472224055296",  
+  dsn: "https://b5924853cd92384acf0a66476507c67e@o4508121170116608.ingest.us.sentry.io/4508482143911936",  
   enableInExpoDevelopment: true,  
   debug: true,  
 });
 
 export default function App() {
   return (
-    <AuthContextProvider>
-      <FoodProvider>
-        <CallProvider>
-          <NavigationContainer>
-            <MainNavigator />
-            <CallNotification />
-          </NavigationContainer>
-        </CallProvider>
-      </FoodProvider>
-    </AuthContextProvider>
+    <Sentry.ErrorBoundary fallback={<FallbackComponent />}>
+      <AuthContextProvider>
+        <FoodProvider>
+          <CallProvider>
+            <NavigationContainer>
+              <MainNavigator />
+              <CallNotification />
+            </NavigationContainer>
+          </CallProvider>
+        </FoodProvider>
+      </AuthContextProvider>
+    </Sentry.ErrorBoundary>
   );
 }
 
 function MainNavigator() {
   const { user } = React.useContext(AuthContext);
   return user ? <AppStack /> : <AuthStack />;
+}
+
+function FallbackComponent() {
+  return (
+    <React.Fragment>
+      <Text>Something went wrong. Please restart the app.</Text>
+    </React.Fragment>
+  );
 }

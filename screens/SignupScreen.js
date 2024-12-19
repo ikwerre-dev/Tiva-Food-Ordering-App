@@ -99,23 +99,7 @@ export default function SignUpScreen({ navigation }) {
           <View style={styles.divider} />
         </View>
 
-        <View style={styles.socialContainer}>
-          <TouchableOpacity style={styles.socialButton}>
-            <Image
-              source={require('../assets/facebook.png')}
-              style={styles.socialIcon}
-            />
-            <Text style={styles.socialButtonText}>FACEBOOK</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.socialButton}>
-            <Image
-              source={require('../assets/google.png')}
-              style={styles.socialIcon}
-            />
-            <Text style={styles.socialButtonText}>GOOGLE</Text>
-          </TouchableOpacity>
-        </View>
+        
       </View>
     </KeyboardAvoidingView>
   );

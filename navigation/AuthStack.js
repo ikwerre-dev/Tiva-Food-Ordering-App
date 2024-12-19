@@ -6,6 +6,7 @@ import LoginScreen from '../screens/LoginScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import ResetSuccessScreen from '../screens/ResetSuccessScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
+import TestScreen from '../screens/TestScreen';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ export default function AuthNavigator() {
     >
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
+      <Stack.Screen name="Test" component={TestScreen} />
       <Stack.Screen name="PhoneRegistration" component={PhoneRegistrationScreen} />
       <Stack.Screen name="VerificationCode" component={VerificationCodeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
