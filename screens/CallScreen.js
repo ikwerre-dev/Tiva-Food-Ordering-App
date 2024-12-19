@@ -8,15 +8,7 @@ import {
   SafeAreaView,
   BackHandler,
 } from 'react-native';
-import {
-  Volume2,
-  Pause,
-  Menu,
-  Video,
-  UserPlus,
-  Mic,
-  PhoneOff,
-} from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/Feather'; // Import Feather icons from react-native-vector-icons
 import { ThemeContext } from '../context/AuthContext';
 import { useCall } from '../context/CallContext';
 import { useFonts } from 'expo-font';
@@ -138,14 +130,14 @@ const Call = ({ navigation }) => {
           <View style={styles.controlsContainer}>
             <View style={styles.row}>
               <TouchableOpacity style={styles.controlButton}>
-                <Volume2 color={iconColor} size={iconSize} />
+                <Icon name="volume-2" color={iconColor} size={iconSize} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.controlButton}>
-                <Pause color={iconColor} size={iconSize} />
+                <Icon name="pause" color={iconColor} size={iconSize} />
               </TouchableOpacity>
               
               <TouchableOpacity style={styles.controlButton}>
-                <Mic color={iconColor} size={iconSize} />
+                <Icon name="mic" color={iconColor} size={iconSize} />
               </TouchableOpacity>
             </View>
              
@@ -156,7 +148,7 @@ const Call = ({ navigation }) => {
           handleHangUp();
           navigation.replace("MainTabs", { screen: "Orders" });
         }} style={styles.hangupButton}>
-          <PhoneOff color="#fff" size={32} />
+          <Icon name="phone-off" color="#fff" size={32} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>

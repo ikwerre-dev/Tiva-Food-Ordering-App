@@ -8,18 +8,7 @@ import {
   Animated,
   Dimensions,
 } from "react-native";
-import {
-  ShoppingBag,
-  User,
-  MapPin,
-  CreditCard,
-  Sun,
-  Moon,
-  Star,
-  LogOut,
-  Bell,
-  Heart,
-} from "lucide-react-native";
+import Icon from 'react-native-vector-icons/Feather';
 import { useFonts } from "expo-font";
 import {
   Poppins_400Regular,
@@ -143,24 +132,24 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
     navigation.navigate(screenName);
   };
 
-  const MenuItem = ({ icon: Icon, title, onPress, color }) => (
+  const MenuItem = ({ icon, title, onPress, color }) => (
     <TouchableOpacity style={styles.menuItem} onPress={onPress}>
       <View style={styles.menuIconContainer}>
-        <Icon color={color} size={24} />
+        {icon}
       </View>
       <Text style={[styles.menuItemText, { color }]}>{title}</Text>
     </TouchableOpacity>
   );
 
   const menuItems = [
-    { icon: ShoppingBag, title: "My Orders", screen: "Orders" },
-    { icon: User, title: "My Profile", screen: "Profile" },
-    { icon: CreditCard, title: "Payment Methods", screen: "PaymentMethods" },
-    { icon: Bell, title: "Notification", screen: "Notification" },
-    { icon: Heart, title: "My Favorites", screen: "Favorites" },
-    { icon: MapPin, title: "Delivery Address", screen: "DeliveryAddress" },
+    { icon: <Icon name="shopping-bag" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "My Orders", screen: "Orders" },
+    { icon: <Icon name="user" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "My Profile", screen: "Profile" },
+    { icon: <Icon name="credit-card" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "Payment Methods", screen: "PaymentMethods" },
+    { icon: <Icon name="bell" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "Notification", screen: "Notification" },
+    { icon: <Icon name="heart" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "My Favorites", screen: "Favorites" },
+    { icon: <Icon name="map-pin" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "Delivery Address", screen: "DeliveryAddress" },
     {
-      icon: theme === "light" ? Moon : Sun,
+      icon: theme === "light" ? <Icon name="moon" color={theme === "light" ? "#000" : "#fff"} size={24} /> : <Icon name="sun" color={theme === "light" ? "#000" : "#fff"} size={24} />,
       title: `${theme === "light" ? "Dark" : "Light"} Mode`,
       onPress: toggleTheme,
     },
@@ -200,7 +189,7 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
                 icon={item.icon}
                 title={item.title}
                 onPress={item.onPress || (() => handleNavigation(item.screen))}
-                color={theme === "light" ? "#000000" : "#FFFFFF"}
+                color={theme === "light" ? "#000" : "#fff"}
               />
             ))}
           </View>
@@ -208,7 +197,7 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <View style={styles.logoutContent}>
-            <LogOut color="#FFFFFF" size={24} />
+            <Icon name="log-out" color="#FFFFFF" size={24} />
             <Text style={styles.logoutText}>Log Out</Text>
           </View>
         </TouchableOpacity>

@@ -11,13 +11,9 @@ import {
   PanResponder,
   Dimensions,
 } from "react-native";
-import {
-  ChevronLeft,
-  Star,
-  Plus,
-  Minus,
-  ShoppingBag,
-} from "lucide-react-native";
+
+import Icon from 'react-native-vector-icons/Feather'; // Import Feather icons from react-native-vector-icons
+
 import { useFoodContext } from "../context/FoodContext";
 import { ThemeContext } from "../context/AuthContext";
 import * as Haptics from 'expo-haptics';
@@ -146,7 +142,8 @@ export default function FoodDetailsScreen({ navigation, route }) {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        <ChevronLeft color="#fff" size={24} />
+        color={theme === 'light' ? '#000' : '#fff'} size={24} />
+        
       </TouchableOpacity>
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
@@ -160,7 +157,7 @@ export default function FoodDetailsScreen({ navigation, route }) {
           <Text style={styles.title}>{item.name}</Text>
 
           <View style={styles.ratingContainer}>
-            <Star fill="#FFD700" color="#FFD700" size={16} />
+            <Icon name="star"   fill="#FFD700" color="#FFD700" size={16} />
             <Text style={styles.rating}>{item.rating}</Text>
             <Text style={styles.reviews}>
               {" • "}
@@ -185,7 +182,7 @@ export default function FoodDetailsScreen({ navigation, route }) {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
                 }}
               >
-                <Minus size={20} color={theme === "light" ? "#000" : "#fff"} />
+                <Icon name="minus"   size={20} color={theme === "light" ? "#000" : "#fff"} />
               </TouchableOpacity>
               <Text style={styles.quantity}>{quantity}</Text>
               <TouchableOpacity
@@ -195,7 +192,7 @@ export default function FoodDetailsScreen({ navigation, route }) {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
                 }}
               >
-                <Plus size={20} color={theme === "light" ? "#000" : "#fff"} />
+                <Icon name="plus"   size={20} color={theme === "light" ? "#000" : "#fff"} />
               </TouchableOpacity>
             </View>
           </View>
@@ -242,7 +239,7 @@ export default function FoodDetailsScreen({ navigation, route }) {
           ]}
           {...panResponder.panHandlers}
         >
-          <ShoppingBag size={24} color="#DC2626" />
+          <Icon name="shopping-bag"  size={24} color="#DC2626" />
         </Animated.View>
         <View style={styles.swipeTrack}>
           {!textHidden &&

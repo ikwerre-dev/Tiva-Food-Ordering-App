@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { ChevronLeft, Eye, EyeOff } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/Ionicons'; // You can choose other icon sets like FontAwesome or MaterialIcons
 
 export default function SignUpScreen({ navigation }) {
   const [fullName, setFullName] = useState('');
@@ -30,7 +30,7 @@ export default function SignUpScreen({ navigation }) {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        <ChevronLeft size={24} color="#FFFFFF" />
+        <Icon name="chevron-back" size={24} color="#FFFFFF" />
       </TouchableOpacity>
       
       <View style={styles.content}>
@@ -71,11 +71,8 @@ export default function SignUpScreen({ navigation }) {
             style={styles.eyeIcon}
             onPress={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? (
-              <Eye size={20} color="#666" />
-            ) : (
-              <EyeOff size={20} color="#666" />
-            )}
+            <Icon name={showPassword ? "eye" : "eye-off"} size={20} color="#666" />
+
           </TouchableOpacity>
         </View>
 
@@ -93,12 +90,7 @@ export default function SignUpScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.dividerContainer}>
-          <View style={styles.divider} />
-          <Text style={styles.dividerText}>Sign up with</Text>
-          <View style={styles.divider} />
-        </View>
-
+        
         
       </View>
     </KeyboardAvoidingView>

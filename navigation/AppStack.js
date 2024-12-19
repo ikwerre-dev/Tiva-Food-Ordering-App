@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, StyleSheet, Text, Platform } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Home, ShoppingBag, Heart, Compass, Wallet } from "lucide-react-native";
+import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icons
 import { ThemeContext } from "../context/AuthContext";
 import * as Haptics from "expo-haptics";
 
@@ -64,18 +64,17 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color }) => {
-          const iconSize = 28; // Increased from 28 to 32
+          const iconSize = 28; // Adjusted icon size
           let icon;
 
           switch (route.name) {
             case "Home":
               icon = (
                 <View style={styles.tabBarIcon}>
-                  <Home
+                  <Icon
+                    name="home"
                     size={iconSize}
-                    color={
-                      focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"
-                    }
+                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
                   />
                 </View>
               );
@@ -83,11 +82,10 @@ function TabNavigator() {
             case "Cart":
               icon = (
                 <View style={styles.tabBarIcon}>
-                  <ShoppingBag
+                  <Icon
+                    name="shopping-bag"
                     size={iconSize}
-                    color={
-                      focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"
-                    }
+                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
                   />
                   {cart && cart.length > 0 && (
                     <View style={styles.tabBarBadge}>
@@ -100,11 +98,10 @@ function TabNavigator() {
             case "Favorites":
               icon = (
                 <View style={styles.tabBarIcon}>
-                  <Heart
+                  <Icon
+                    name="heart"
                     size={iconSize}
-                    color={
-                      focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"
-                    }
+                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
                     fill={focused ? "#DC2626" : "none"}
                   />
                 </View>
@@ -113,11 +110,10 @@ function TabNavigator() {
             case "Orders":
               icon = (
                 <View style={styles.tabBarIcon}>
-                  <Compass
+                  <Icon
+                    name="compass"
                     size={iconSize}
-                    color={
-                      focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"
-                    }
+                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
                   />
                 </View>
               );
@@ -125,11 +121,10 @@ function TabNavigator() {
             case "Wallet":
               icon = (
                 <View style={styles.tabBarIcon}>
-                  <Wallet
+                  <Icon
+                    name="wallet"
                     size={iconSize}
-                    color={
-                      focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"
-                    }
+                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
                   />
                 </View>
               );
@@ -172,15 +167,6 @@ function TabNavigator() {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
         }}
       />
-      {/* <Tab.Screen
-        name="Favorites"
-        component={FavoritesScreen}
-        options={{ headerShown: false }}
-        listeners={{
-          tabPress: () =>
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
-        }}
-      /> */}
       <Tab.Screen
         name="Wallet"
         component={WalletScreen}

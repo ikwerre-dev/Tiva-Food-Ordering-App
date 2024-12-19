@@ -11,7 +11,7 @@ import {
   TextInput,
   Alert
 } from 'react-native';
-import { ChevronLeft, CreditCard, Plus, X } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import { ThemeContext } from '../context/AuthContext';
 import { useFonts, Livvic_400Regular, Livvic_700Bold } from '@expo-google-fonts/livvic';
 import AppLoading from '../components/Loader';
@@ -99,7 +99,7 @@ const PaymentMethod = ({ navigation }) => {
       >
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ChevronLeft color={theme === 'light' ? '#000' : '#fff'} size={24} />
+            <Icon name="chevron-left" color={theme === 'light' ? '#000' : '#fff'} size={24} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Payment method</Text>
         </View>
@@ -111,7 +111,7 @@ const PaymentMethod = ({ navigation }) => {
           {cards.map((card) => (
             <View key={card.id} style={styles.cardContainer}>
               <View style={styles.cardInfo}>
-                <CreditCard color={theme === 'light' ? '#000' : '#fff'} size={24} />
+                <Icon name="credit-card" color={theme === 'light' ? '#000' : '#fff'} size={24} />
                 <View style={styles.cardDetails}>
                   <Text style={styles.cardNumber}>{card.type} ending in {card.number}</Text>
                   <Text style={styles.cardExpiry}>Expiry {card.expiry}</Text>
@@ -130,7 +130,7 @@ const PaymentMethod = ({ navigation }) => {
           
           {!showForm && (
             <TouchableOpacity style={styles.addCardButton} onPress={handleAddCard}>
-              <Plus color={theme === 'light' ? '#f44336' : '#ff7961'} size={24} />
+              <Icon name="plus" color={theme === 'light' ? '#f44336' : '#ff7961'} size={24} />
               <Text style={styles.addCardButtonText}>Add new card</Text>
             </TouchableOpacity>
           )}
@@ -140,7 +140,7 @@ const PaymentMethod = ({ navigation }) => {
               <View style={styles.formHeader}>
                 <Text style={styles.formTitle}>{editingCard ? 'Edit Card' : 'Add New Card'}</Text>
                 <TouchableOpacity onPress={() => setShowForm(false)}>
-                  <X color={theme === 'light' ? '#000' : '#fff'} size={24} />
+                  <Icon name="x" color={theme === 'light' ? '#000' : '#fff'} size={24} />
                 </TouchableOpacity>
               </View>
               <View style={styles.inputContainer}>

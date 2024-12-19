@@ -8,7 +8,8 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import { ChevronLeft, Bell, Heart, Star } from "lucide-react-native";
+import Icon from 'react-native-vector-icons/Feather'; // For icons like Bell, Search, Filter, Menu, Star, etc.
+
 import { useFoodContext } from "../context/FoodContext";
 import { ThemeContext } from "../context/AuthContext";
 import { SafeAreaView } from "react-native";
@@ -211,11 +212,11 @@ export default function FavoritesScreen({ navigation }) {
         style={dynamicStyles.cardImage}
       />
       <TouchableOpacity style={dynamicStyles.heartButton}>
-        <Heart fill="#DC2626" color="#DC2626" size={20} />
+        <Icon name="heart"  fill="#DC2626" color="#DC2626" size={20} />
       </TouchableOpacity>
       <View style={dynamicStyles.cardContent}>
         <View style={dynamicStyles.rating}>
-          <Star fill="#FFB800" color="#FFB800" size={16} />
+          <Icon name="star" fill="#FFB800" color="#FFB800" size={16} />
           <Text style={dynamicStyles.ratingText}>{item.rating}</Text>
           <Text style={[dynamicStyles.text, { marginLeft: 4 }]}>
             (25+ ratings)
@@ -244,7 +245,7 @@ export default function FavoritesScreen({ navigation }) {
       
       <View style={dynamicStyles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <ChevronLeft color={theme === 'light' ? '#000' : '#fff'} size={24} />
+          <Icon name="chevron-left"  color={theme === 'light' ? '#000' : '#fff'} size={24} />
         </TouchableOpacity>
         <Text style={dynamicStyles.headerTitle}>My Favorites</Text>
         <Text></Text>

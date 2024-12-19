@@ -11,22 +11,12 @@ import {
   SafeAreaView,
   Animated,
   Dimensions,
-  Platform
+  Platform,
 } from "react-native";
-import {
-  Bell,
-  Search,
-  Filter,
-  Menu,
-  Star,
-  ChevronRight,
-  Heart,
-  ToggleRightIcon,
-  SwitchCameraIcon,
-  ListFilter,
-  Moon,
-  Sun,
-} from "lucide-react-native";
+
+
+import Icon from "react-native-vector-icons/Feather"; // Import Feather icons from react-native-vector-icons
+
 import { featuredRestaurants, foodCourt, categories } from "../data/foodData";
 import MenuOverlay from "../components/MenuOverlay";
 import { useFonts } from "expo-font";
@@ -35,20 +25,20 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
-import AppLoading from '../components/Loader';
+import AppLoading from "../components/Loader";
 import { ThemeContext } from "../context/AuthContext";
 import { useCall } from "../context/CallContext";
 
 const { width } = Dimensions.get("window");
-import darkMenu from "../assets/darkmenuIcon.png"
-import MenuIcon from "../assets/menuIcon.png"
+import darkMenu from "../assets/darkmenuIcon.png";
+import MenuIcon from "../assets/menuIcon.png";
 
 const getStyles = (theme) =>
   StyleSheet.create({
     safeArea: {
       flex: 1,
-      paddingTop:  Platform.OS === "android" ?  25 : 5,
-      
+      paddingTop: Platform.OS === "android" ? 25 : 5,
+
       backgroundColor: theme === "light" ? "#FFFFFF" : "#101112",
     },
     container: {
@@ -156,7 +146,7 @@ const getStyles = (theme) =>
     searchInput: {
       flex: 1,
       color: "#fff",
-      padding:  Platform.OS === "android" ?  5 : 20,
+      padding: Platform.OS === "android" ? 5 : 20,
       fontSize: 17,
       fontFamily: "Livvic_400Regular",
     },
@@ -428,11 +418,7 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.headerLeft}>
             <TouchableOpacity style={styles.menuButton} onPress={toggleMenu}>
               <Image
-                source={
-                  theme === "light"
-                    ? darkMenu
-                    : MenuIcon
-                }
+                source={theme === "light" ? darkMenu : MenuIcon}
                 style={styles.socialIcon}
               />
             </TouchableOpacity>
@@ -440,20 +426,29 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity style={styles.iconButton} onPress={toggleTheme}>
               {theme === "light" ? (
-                <Sun color={theme === "light" ? "#000" : "#fff"} size={24} />
+                <Icon
+                  name="sun"
+                  color={theme === "light" ? "#000" : "#fff"}
+                  size={24}
+                />
               ) : (
-                <Moon
-                  fill={theme === "light" ? "#000" : "#fff"}
-                  color={theme === "light" ? "#fff" : "#fff"}
+                <Icon
+                  name="moon"
+                  color={theme === "light" ? "#fff" : "#000"}
                   size={24}
                 />
               )}
             </TouchableOpacity>
+
             <TouchableOpacity
               onPress={() => navigation.navigate("Notification")}
               style={styles.iconButton}
             >
-              <Bell color={theme === "light" ? "#000" : "#fff"} size={24} />
+              <Icon
+                name="bell"
+                color={theme === "light" ? "#000" : "#fff"}
+                size={24}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -466,7 +461,8 @@ export default function HomeScreen({ navigation }) {
 
           <View style={styles.searchContainer}>
             <View style={styles.searchBar}>
-              <Search color="#666" size={20} />
+              <Icon name="search" color="#666" size={20} />{" "}
+              {/* Replaced Search icon */}
               <TextInput
                 style={styles.searchInput}
                 placeholder="Find food or restaurant..."
@@ -474,7 +470,8 @@ export default function HomeScreen({ navigation }) {
               />
             </View>
             <TouchableOpacity style={styles.filterButton}>
-              <ListFilter color="#DC2626" size={20} />
+              <Icon name="filter" color="#DC2626" size={20} />{" "}
+              {/* Replaced ListFilter icon */}
             </TouchableOpacity>
           </View>
 
@@ -482,7 +479,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.sectionTitle}>Featured Restaurants</Text>
             <TouchableOpacity>
               <Text style={styles.viewAll}>
-                View All <ChevronRight size={16} color="#DC2626" />
+                View All <Icon name="chevron-right" color="#DC2626" size={16} />
               </Text>
             </TouchableOpacity>
           </View>
@@ -496,10 +493,13 @@ export default function HomeScreen({ navigation }) {
                 <View style={styles.restaurantCard}>
                   <View style={styles.ratingContainer}>
                     <Text style={styles.rating}>{restaurant.rating}</Text>
-                    <Star fill="#FFD700" color="#FFD700" size={12} />
+                    <Icon name="star" color="#FFD700" size={12} />{" "}
+                    {/* Replaced Star icon */}
                   </View>
+
                   <TouchableOpacity style={styles.favoriteButton}>
-                    <Heart color="#fff" size={20} />
+                    <Icon name="heart" color="#fff" size={20} />{" "}
+                    {/* Replaced Heart icon */}
                   </TouchableOpacity>
                   <Image
                     source={{ uri: restaurant.image }}
@@ -558,12 +558,12 @@ export default function HomeScreen({ navigation }) {
                   <Text style={styles.sectionTitle}>{category.name}</Text>
                   <TouchableOpacity>
                     <Text style={styles.viewAll}>
-                      View All <ChevronRight size={16} color="#DC2626" />
+                      View All <Icon name="chevron-right" color="#DC2626" size={16} />
                     </Text>
                   </TouchableOpacity>
                 </View>
 
-                {(index % 2 == 0 ) ? (
+                {index % 2 == 0 ? (
                   <View style={styles.foodCourtGrid}>
                     {category.items &&
                       category.items.slice(0, 4).map((restaurant) => (
@@ -623,70 +623,71 @@ export default function HomeScreen({ navigation }) {
                   <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     {category.items &&
                       category.items.slice(0, 10).map((restaurant) => (
-                      <TouchableWithoutFeedback
-                        key={restaurant.id}
-                        onPress={() =>
-                          navigation.navigate("FoodDetails", restaurant)
-                        }
-                      >
-                        <View style={styles.restaurantCard}>
-                          <View style={styles.ratingContainer}>
-                            <Text style={styles.rating}>
-                              {restaurant.rating}
-                            </Text>
-                            <Star fill="#FFD700" color="#FFD700" size={12} />
-                          </View>
-                          <TouchableOpacity style={styles.favoriteButton}>
-                            <Heart color="#fff" size={20} />
-                          </TouchableOpacity>
-                          <Image
-                            source={{ uri: restaurant.image }}
-                            style={styles.restaurantImage}
-                          />
-                           <View style={styles.restaurantInfo}>
-                            <View style={styles.restaurantNameRow}>
-                              <Text style={styles.restaurantName}>
-                                {restaurant.name}
+                        <TouchableWithoutFeedback
+                          key={restaurant.id}
+                          onPress={() =>
+                            navigation.navigate("FoodDetails", restaurant)
+                          }
+                        >
+                          <View style={styles.restaurantCard}>
+                            <View style={styles.ratingContainer}>
+                              <Text style={styles.rating}>
+                                {restaurant.rating}
                               </Text>
-                              {restaurant.isVerified && (
-                                <View style={styles.verifiedBadge}>
-                                  <Text style={styles.verifiedText}>✓</Text>
-                                </View>
-                              )}
+                              <Star fill="#FFD700" color="#FFD700" size={12} />
                             </View>
-                            <Text style={styles.pricetagText}>
-                              {" "}
-                              {"₦"}
-                              {restaurant.price && restaurant.price.toFixed(2)}
-                              {" • "}
-                              {restaurant.delivery.isFree
-                                ? "Free delivery"
-                                : "Paid delivery"}
-                              {" • "}
-                              {restaurant.delivery.time}
-                            </Text>
-                            <View style={styles.mypricetags}>
-                              <View style={styles.mypricetag}>
-                                <Text style={styles.mypricetagText}>
-                                  {" "}
-                                  {"₦"}
-                                  {restaurant.price &&
-                                    restaurant.price.toFixed(2)}
+                            <TouchableOpacity style={styles.favoriteButton}>
+                              <Heart color="#fff" size={20} />
+                            </TouchableOpacity>
+                            <Image
+                              source={{ uri: restaurant.image }}
+                              style={styles.restaurantImage}
+                            />
+                            <View style={styles.restaurantInfo}>
+                              <View style={styles.restaurantNameRow}>
+                                <Text style={styles.restaurantName}>
+                                  {restaurant.name}
                                 </Text>
+                                {restaurant.isVerified && (
+                                  <View style={styles.verifiedBadge}>
+                                    <Text style={styles.verifiedText}>✓</Text>
+                                  </View>
+                                )}
+                              </View>
+                              <Text style={styles.pricetagText}>
+                                {" "}
+                                {"₦"}
+                                {restaurant.price &&
+                                  restaurant.price.toFixed(2)}
+                                {" • "}
+                                {restaurant.delivery.isFree
+                                  ? "Free delivery"
+                                  : "Paid delivery"}
+                                {" • "}
+                                {restaurant.delivery.time}
+                              </Text>
+                              <View style={styles.mypricetags}>
+                                <View style={styles.mypricetag}>
+                                  <Text style={styles.mypricetagText}>
+                                    {" "}
+                                    {"₦"}
+                                    {restaurant.price &&
+                                      restaurant.price.toFixed(2)}
+                                  </Text>
+                                </View>
+                              </View>
+
+                              <View style={styles.tags}>
+                                {restaurant.tags.map((tag, index) => (
+                                  <View key={index} style={styles.tag}>
+                                    <Text style={styles.tagText}>{tag}</Text>
+                                  </View>
+                                ))}
                               </View>
                             </View>
-
-                            <View style={styles.tags}>
-                              {restaurant.tags.map((tag, index) => (
-                                <View key={index} style={styles.tag}>
-                                  <Text style={styles.tagText}>{tag}</Text>
-                                </View>
-                              ))}
-                            </View>
                           </View>
-                        </View>
-                      </TouchableWithoutFeedback>
-                    ))}
+                        </TouchableWithoutFeedback>
+                      ))}
                   </ScrollView>
                 )}
               </View>

@@ -12,20 +12,10 @@ import {
   Animated,
   Dimensions,
 } from "react-native";
-import {
-  Bell,
-  Search,
-  Filter,
-  Menu,
-  Star,
-  ChevronRight,
-  Heart,
-  ToggleRightIcon,
-  SwitchCameraIcon,
-  ListFilter,
-  Moon,
-  Sun,
-} from "lucide-react-native";
+import Icon from 'react-native-vector-icons/Feather'; // For icons like Bell, Search, Filter, Menu, Star, etc.
+import IconToggle from 'react-native-vector-icons/Ionicons'; // For icons like ToggleRightIcon, SwitchCameraIcon
+import IconMoonSun from 'react-native-vector-icons/MaterialCommunityIcons'; // For Moon and Sun
+
 import { featuredRestaurants, foodCourt, categories } from "../data/foodData";
 import MenuOverlay from "../components/MenuOverlay";
 import { useFonts } from "expo-font";
@@ -439,20 +429,17 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity style={styles.iconButton} onPress={toggleTheme}>
               {theme === "light" ? (
-                <Sun color={theme === "light" ? "#000" : "#fff"} size={24} />
+                <Icon name="sun" color={theme === "light" ? "#000" : "#fff"} size={24} />
               ) : (
-                <Moon
-                  fill={theme === "light" ? "#000" : "#fff"}
-                  color={theme === "light" ? "#fff" : "#fff"}
-                  size={24}
-                />
+                <Icon name="moon" color={theme === "light" ? "#fff" : "#000"} size={24} />
               )}
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => navigation.navigate("Notification")}
               style={styles.iconButton}
             >
-              <Bell color={theme === "light" ? "#000" : "#fff"} size={24} />
+              <Icon name="bell" color={theme === "light" ? "#000" : "#fff"} size={24}  />
+
             </TouchableOpacity>
           </View>
         </View>
@@ -465,7 +452,7 @@ export default function HomeScreen({ navigation }) {
 
           <View style={styles.searchContainer}>
             <View style={styles.searchBar}>
-              <Search color="#666" size={20} />
+              <Icon name="search" color="#666" size={20} />
               <TextInput
                 style={styles.searchInput}
                 placeholder="Find or food or restaurant..."
@@ -473,7 +460,7 @@ export default function HomeScreen({ navigation }) {
               />
             </View>
             <TouchableOpacity style={styles.filterButton}>
-              <ListFilter color="#DC2626" size={20} />
+              <Icon name="filter"  color="#DC2626" size={20} />
             </TouchableOpacity>
           </View>
 
@@ -481,7 +468,7 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.sectionTitle}>Featured Restaurants</Text>
             <TouchableOpacity>
               <Text style={styles.viewAll}>
-                View All <ChevronRight size={16} color="#DC2626" />
+                View All <Icon name="chevron-right" size={16} color="#DC2626" />
               </Text>
             </TouchableOpacity>
           </View>
@@ -495,10 +482,10 @@ export default function HomeScreen({ navigation }) {
                 <View style={styles.restaurantCard}>
                   <View style={styles.ratingContainer}>
                     <Text style={styles.rating}>{restaurant.rating}</Text>
-                    <Star fill="#FFD700" color="#FFD700" size={12} />
+                    <Icon name="star"  fill="#FFD700" color="#FFD700" size={12} />
                   </View>
                   <TouchableOpacity style={styles.favoriteButton}>
-                    <Heart color="#fff" size={20} />
+                   <Icon name="heart"color="#fff" size={20} />
                   </TouchableOpacity>
                   <Image
                     source={{ uri: restaurant.image }}
@@ -557,7 +544,7 @@ export default function HomeScreen({ navigation }) {
                   <Text style={styles.sectionTitle}>{category.name}</Text>
                   <TouchableOpacity>
                     <Text style={styles.viewAll}>
-                      View All <ChevronRight size={16} color="#DC2626" />
+                      View All <Icon name="chevron-right"  size={16} color="#DC2626" />
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -573,7 +560,7 @@ export default function HomeScreen({ navigation }) {
                       >
                         <View style={styles.foodCourtCard}>
                           <TouchableOpacity style={styles.favoriteButton}>
-                            <Heart color="#fff" size={20} />
+                            <Icon name="heart" color="#fff" size={20} />
                           </TouchableOpacity>
                           <Image
                             source={{ uri: restaurant.image }}

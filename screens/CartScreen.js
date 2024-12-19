@@ -13,7 +13,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { ChevronLeft, X } from "lucide-react-native";
+import Icon from 'react-native-vector-icons/Feather';
 import { useFoodContext } from "../context/FoodContext";
 import { ThemeContext } from "../context/AuthContext";
 import { SafeAreaView } from "react-native";
@@ -209,7 +209,7 @@ export default function CartScreen({ navigation }) {
                   </View>
                   <View style={styles.itemQuantity}>
                     <TouchableOpacity onPress={() => removeFromCart(item.id)}>
-                      <X color="#DC2626" size={20} />
+                      <Icon name="x" color="#DC2626" size={20} />
                     </TouchableOpacity>
                     <Text style={[styles.quantityText, dynamicStyles.text]}>
                       {item.quantity}

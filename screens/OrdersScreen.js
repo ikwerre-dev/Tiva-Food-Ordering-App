@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   Dimensions,
 } from "react-native";
-import { Bell } from "lucide-react-native";
+import Icon from 'react-native-vector-icons/Feather';
 import { useFonts } from "expo-font";
 import {
   Poppins_400Regular,

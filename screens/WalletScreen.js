@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { ChevronLeft } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { ThemeContext } from '../context/AuthContext';
 import { useFonts } from 'expo-font';
 import { Livvic_400Regular, Livvic_700Bold } from '@expo-google-fonts/livvic';

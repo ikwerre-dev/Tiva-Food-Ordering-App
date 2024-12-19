@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { ChevronLeft } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function VerificationCodeScreen({ navigation }) {
   const [code, setCode] = useState(['', '', '', '']);
@@ -33,7 +33,7 @@ export default function VerificationCodeScreen({ navigation }) {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        <ChevronLeft color="#FFFFFF" size={24} />
+       <Icon name="chevron-left" color="#FFFFFF" size={24} />
       </TouchableOpacity>
 
       <View style={styles.content}>

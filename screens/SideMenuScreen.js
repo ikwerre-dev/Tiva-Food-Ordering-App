@@ -7,26 +7,19 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { 
-  ShoppingBag, 
-  User, 
-  MapPin, 
-  CreditCard, 
-  Sun, 
-  Star, 
-  LogOut 
-} from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/Feather';
 
 export default function SideMenuScreen({ navigation }) {
   const menuItems = [
-    { icon: ShoppingBag, title: 'My Orders' },
-    { icon: User, title: 'My Profile' },
-    { icon: MapPin, title: 'Delivery Address' },
-    { icon: CreditCard, title: 'Payment Methods' },
-    { icon: Sun, title: 'Light Mode' },
-    { icon: Star, title: 'Your Ratings' },
+    { icon: 'shopping-bag', title: 'My Orders' },
+    { icon: 'user', title: 'My Profile' },
+    { icon: 'map-pin', title: 'Delivery Address' },
+    { icon: 'credit-card', title: 'Payment Methods' },
+    { icon: 'sun', title: 'Light Mode' },
+    { icon: 'star', title: 'Your Ratings' },
+    { icon: 'log-out', title: 'Log Out' },
   ];
-
+  
   return (
     <View style={styles.container}>
       <ScrollView style={styles.content}>
@@ -43,7 +36,7 @@ export default function SideMenuScreen({ navigation }) {
 
         {menuItems.map((item, index) => (
           <TouchableOpacity key={index} style={styles.menuItem}>
-            <item.icon color="#fff" size={24} />
+            <Icon name={item.icon} size={24} color="#fff" />
             <Text style={styles.menuItemText}>{item.title}</Text>
           </TouchableOpacity>
         ))}

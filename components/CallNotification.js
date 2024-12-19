@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { useCall } from "../context/CallContext";
 import { useNavigation } from "@react-navigation/native";
 import { Accelerometer } from "expo-sensors";
-import { PhoneCall, X } from "lucide-react-native";
+import Icon from "react-native-vector-icons/FontAwesome"; // Import icons from react-native-vector-icons
 import { useFonts } from "expo-font";
 import {
   Poppins_400Regular,
@@ -68,18 +68,18 @@ const CallNotification = () => {
     <View style={styles.container}>
       <View style={styles.subcontainer}>
         <Text style={styles.text}>Incoming call</Text>
-        <View style={{flexDirection: 'row',gap: 10}}>
+        <View style={{flexDirection: 'row', gap: 10}}>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "red" }]}
             onPress={handleHangUp}
           >
-            <X color={"white"} />
+            <Icon name="times" size={20} color="white" /> {/* Use times icon for hangup */}
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "green" }]}
             onPress={pickCall}
           >
-            <PhoneCall color={"white"} />
+            <Icon name="phone" size={20} color="white" /> {/* Use phone icon for pickup */}
           </TouchableOpacity>
         </View>
       </View>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   subcontainer: {
     backgroundColor: "rgba(0, 0, 0, 0.9)",
     padding: 12,
-    paddingHorizontal:12,
+    paddingHorizontal: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -108,8 +108,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontFamily: "Livvic_700Bold",
-    paddingLeft:10
-    
+    paddingLeft: 10,
   },
   button: {
     width: 50,

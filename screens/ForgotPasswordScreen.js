@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { ChevronLeft, Eye, EyeOff } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/Feather';
 
 export default function ForgotPasswordScreen({ navigation }) {
   const [password, setPassword] = useState('');
@@ -23,7 +23,7 @@ export default function ForgotPasswordScreen({ navigation }) {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        <ChevronLeft color="#FFFFFF" size={24} />
+       <Icon name="chevron-left" color="#FFFFFF" size={24} />
       </TouchableOpacity>
 
       <View style={styles.content}>
@@ -46,9 +46,9 @@ export default function ForgotPasswordScreen({ navigation }) {
             onPress={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
-              <Eye size={20} color="#666" />
+              <Icon name="eye" size={20} color="#666" />
             ) : (
-              <EyeOff size={20} color="#666" />
+              <Icon name="eye-off" size={20} color="#666" />
             )}
           </TouchableOpacity>
         </View>

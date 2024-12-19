@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { ChevronLeft } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function PhoneRegistrationScreen({ navigation }) {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -22,7 +22,7 @@ export default function PhoneRegistrationScreen({ navigation }) {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        <ChevronLeft color="#FFFFFF" size={24} />
+       <Icon name="chevron-left" color="#FFFFFF" size={24} />
       </TouchableOpacity>
 
       <View style={styles.content}>

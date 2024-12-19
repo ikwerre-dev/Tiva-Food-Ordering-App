@@ -10,7 +10,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { Bell, ChevronLeft, X } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/Feather'; // For icons like Bell, Search, Filter, Menu, Star, etc.
 import { ThemeContext } from '../context/AuthContext';
 import { useFonts, Livvic_400Regular, Livvic_700Bold } from '@expo-google-fonts/livvic';
 import AppLoading from '../components/Loader';
@@ -72,7 +72,7 @@ const NotificationModal = ({ visible, notification, onClose }) => {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Notification details</Text>
               <TouchableOpacity onPress={onClose}>
-                <X color={theme === 'light' ? '#000' : '#fff'} size={24} />
+                <Icon name="x"  color={theme === 'light' ? '#000' : '#fff'} size={24} />
               </TouchableOpacity>
             </View>
 
@@ -122,7 +122,7 @@ const NotificationScreen = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ChevronLeft color={theme === 'light' ? '#000' : '#fff'} size={24} />
+            <Icon name="chevron-left"  color={theme === 'light' ? '#000' : '#fff'} size={24} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Notification</Text>
         </View>
@@ -135,7 +135,7 @@ const NotificationScreen = ({ navigation }) => {
               onPress={() => handleNotificationPress(notification)}
             >
               <View style={styles.notificationIcon}>
-                <Bell color={theme === 'light' ? '#000' : '#fff'} size={24} />
+               <Icon name="bell"  color={theme === 'light' ? '#000' : '#fff'} size={24} />
               </View>
               <View style={styles.notificationContent}>
                 <Text style={styles.notificationTitle}>{notification.title.length > 30 ? notification.title.slice(0,30) + '...' : notification.title}</Text>

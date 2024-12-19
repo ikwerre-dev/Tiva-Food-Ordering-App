@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Eye, EyeOff, ChevronLeft } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import { AuthContext } from '../context/AuthContext';
 
 export default function LoginScreen({ navigation }) {
@@ -36,7 +36,7 @@ export default function LoginScreen({ navigation }) {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        <ChevronLeft size={24} color="#FFFFFF" />
+        <Icon name="chevron-left" size={24} color="#000" />
       </TouchableOpacity>
 
       <View style={styles.content}>
@@ -69,9 +69,9 @@ export default function LoginScreen({ navigation }) {
             onPress={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
-              <Eye size={20} color="#666" />
+              <Icon name="eye" size={20} color="#666" />
             ) : (
-              <EyeOff size={20} color="#666" />
+              <Icon name="eye-off" size={20} color="#666" />
             )}
           </TouchableOpacity>
         </View>

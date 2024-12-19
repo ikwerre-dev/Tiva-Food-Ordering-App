@@ -7,12 +7,12 @@ import {
   SafeAreaView,
   ImageBackground,
   Linking,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
-import { Bell, Check, ChevronLeft, PhoneCall } from "lucide-react-native";
+import Icon from "react-native-vector-icons/Feather";
 import { useFonts } from "expo-font";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
-import AppLoading from '../components/Loader';
+import AppLoading from "../components/Loader";
 import { ThemeContext } from "../context/AuthContext";
 import { ScrollView } from "react-native";
 import trackerImage from "../assets/tracker.png";
@@ -58,7 +58,6 @@ const getStyles = (theme) => ({
         ? "rgba(255, 255, 255, 1.95)"
         : "rgba(16, 17, 18, 1.95)",
     height: "100%",
-    
   },
   cardTitle: {
     fontSize: 20,
@@ -169,7 +168,7 @@ const getStyles = (theme) => ({
     paddingVertical: 16,
     borderRadius: 25,
     alignItems: "center",
-    marginBottom:50
+    marginBottom: 50,
   },
   okayButtonText: {
     color: "#fff",
@@ -220,7 +219,7 @@ const StatusStep = ({
             isCurrent && styles.stepIconCurrent,
           ]}
         >
-          {isCompleted && <Check size={16} color="#fff" />}
+          {isCompleted && <Icon name="check-circle" size={16} color="#fff" />}
           {isCurrent && <View style={styles.currentDot} />}
           {!isCompleted && !isCurrent && <View style={styles.inactiveDot} />}
         </View>
@@ -261,16 +260,16 @@ const TrackOrderScreen = ({ navigation }) => {
   const handlePhoneCall = async () => {
     setIsLoading(true);
     try {
-      await Linking.openURL('tel:+2349163169949');
+      await Linking.openURL("tel:+2349163169949");
     } catch (error) {
-      console.error('Failed to make the call:', error);
+      console.error("Failed to make the call:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const riderId = 100;
-  
+
   let [fontsLoaded] = useFonts({
     Livvic_400Regular,
     Livvic_700Bold,
@@ -333,7 +332,8 @@ const TrackOrderScreen = ({ navigation }) => {
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <View style={styles.backButton}>
-              <ChevronLeft color="#fff" size={24} />
+              <Icon name="chevron-left" color="#fff" size={24} />{" "}
+              {/* Replaced ChevronLeft */}
             </View>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Track Order</Text>
@@ -341,7 +341,7 @@ const TrackOrderScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("Notification")}
             style={styles.iconButton}
           >
-            <Bell color="#fff" size={24} />
+            <Icon name="bell" color="#fff" size={24} /> {/* Replaced Bell */}
           </TouchableOpacity>
         </View>
 
@@ -383,26 +383,33 @@ const TrackOrderScreen = ({ navigation }) => {
               </View>
             </View>
           </View>
-     
+
           <View style={styles.callcontainer}>
-            <TouchableOpacity onPress={() => navigation.push("CallScreen", { riderId: riderId })} style={styles.button}>
-              <PhoneCall size={20} color="#A45C27" />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.push("CallScreen", { riderId: riderId })
+              }
+              style={styles.button}
+            >
+              <Icon name="phone" size={20} color="#A45C27" />
+
               <Text style={styles.buttonText}>In app Call</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                 style={styles.button}
-                 onPress={handlePhoneCall}
-                 disabled={isLoading}
-               >
-                 {isLoading ? (
-                   <ActivityIndicator size="small" color="#A45C27" />
-                 ) : (
-                   <>
-                     <PhoneCall size={20} color="#A45C27" />
-                     <Text style={styles.buttonText}>Phone Call</Text>
-                   </>
-                 )}
-               </TouchableOpacity>
+              style={styles.button}
+              onPress={handlePhoneCall}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#A45C27" />
+              ) : (
+                <>
+                  <Icon name="phone" size={20} color="#A45C27" />
+
+                  <Text style={styles.buttonText}>Phone Call</Text>
+                </>
+              )}
+            </TouchableOpacity>
           </View>
           <TouchableOpacity
             style={styles.okayButton}
