@@ -45,7 +45,7 @@ const OnboardingScreen = ({ navigation }) => {
     } else {
       // Navigate to the next screen
       // console.log('Get Started');
-      navigation.push('Test')
+      navigation.push('SignUp')
     }
   };
 

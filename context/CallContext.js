@@ -8,7 +8,8 @@ import React, {
 } from "react";
 import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics"; // Import Haptics for vibration
-
+import incomingSound from "../assets/audio/incoming.mp3";
+import OutboundSound from "../assets/audio/outbound.mp3";
 const CallContext = createContext();
 export const useCall = () => useContext(CallContext);
 
@@ -48,7 +49,7 @@ export const CallProvider = ({ children }) => {
 
     try {
       const { sound } = await Audio.Sound.createAsync(
-        require("../assets/audio/outbound.mp3"),
+        OutboundSound,
       );
       soundRef.current = sound;
       await sound.playAsync();
@@ -83,7 +84,7 @@ export const CallProvider = ({ children }) => {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
       // Play incoming call sound
-      Audio.Sound.createAsync(require("../assets/audio/incoming.mp3")).then(
+      Audio.Sound.createAsync(incomingSound).then(
         ({ sound }) => {
           soundRef.current = sound;
           sound.playAsync();

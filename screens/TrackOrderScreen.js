@@ -15,7 +15,7 @@ import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
 import AppLoading from '../components/Loader';
 import { ThemeContext } from "../context/AuthContext";
 import { ScrollView } from "react-native";
-
+import trackerImage from "../assets/tracker.png";
 const getStyles = (theme) => ({
   background: {
     flex: 1,
@@ -323,7 +323,7 @@ const TrackOrderScreen = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require("../assets/tracker.png")}
+      source={trackerImage}
       style={[
         styles.background,
         // { opacity: theme === 'light' ? 0.1 : 0.05 }

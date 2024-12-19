@@ -328,6 +328,10 @@ const getStyles = (theme,width) =>
       color: theme === "light" ? "#000" : "#fff",
       marginBottom: 15,
     },
+    description: {
+      color: theme === "light" ? "#000" : "#fff",
+      marginVertical:15
+    },
     quantityContainer: {
       marginBottom: 20,
     },

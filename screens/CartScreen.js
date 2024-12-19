@@ -25,6 +25,7 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
+import cartImage from "../assets/cart.png";
 
 export default function CartScreen({ navigation }) {
   const { cart, removeFromCart,clearCart } = useFoodContext();
@@ -334,7 +335,7 @@ export default function CartScreen({ navigation }) {
         ) : (
           <View style={styles.emptyCartContainer}>
             <Image
-              source={require("../assets/cart.png")}
+              source={cartImage}
               style={styles.emptyCartImage}
             />
             <Text style={[styles.emptyCartText, dynamicStyles.text]}>

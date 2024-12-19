@@ -18,7 +18,7 @@ import AppLoading from '../components/Loader';
 
 
 const { width } = Dimensions.get('window');
-
+import profileBanner from '../assets/profilebanner.png';
 const Profile = ({ navigation }) => {
   const { theme } = useContext(ThemeContext);
   
@@ -39,7 +39,7 @@ const Profile = ({ navigation }) => {
       style={styles.container}
     >
       <Image
-        source={require('../assets/profilebanner.png')}
+        source={profileBanner}
         style={styles.bannerImage}
       />
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>

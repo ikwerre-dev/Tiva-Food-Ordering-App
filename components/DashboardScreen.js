@@ -39,6 +39,9 @@ import { ThemeContext } from "../context/AuthContext";
 import { useCall } from "../context/CallContext";
 
 const { width } = Dimensions.get("window");
+import darkMenu from "../assets/darkmenuIcon.png"
+import MenuIcon from "../assets/menuIcon.png"
+
 
 const getStyles = (theme) =>
   StyleSheet.create({
@@ -426,8 +429,8 @@ export default function HomeScreen({ navigation }) {
               <Image
                 source={
                   theme === "light"
-                    ? require("../assets/darkmenuIcon.png")
-                    : require("../assets/menuIcon.png")
+                    ? darkMenu
+                    : MenuIcon
                 }
                 style={styles.socialIcon}
               />
