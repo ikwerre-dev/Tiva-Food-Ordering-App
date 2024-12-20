@@ -38,7 +38,7 @@ function TabNavigator() {
   const { theme } = useContext(ThemeContext);
   const { cart, removeFromCart } = useFoodContext();
   const insets = useSafeAreaInsets();;
-
+  // console.log(insets)
   const isDarkTheme = theme === "dark";
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
@@ -56,8 +56,8 @@ function TabNavigator() {
       backgroundColor: isDarkTheme ? "#1A1A1A" : "#FFFFFF",
       borderTopWidth: 1,
       borderTopColor: isDarkTheme ? "#333333" : "#E5E7EB",
-      height: insets.bottom + 60,
-      // paddingBottom:  50,
+      height:  Platform.OS === "android" ? insets.bottom + 90 : 90,
+      paddingTop:  6,
       paddingHorizontal: 16,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: -2 },
@@ -94,7 +94,7 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color }) => {
-          const iconSize = 24;
+          const iconSize = 30;
           let iconName;
 
           switch (route.name) {
@@ -140,7 +140,7 @@ function TabNavigator() {
           </Text>
         ),
         tabBarStyle: styles.tabBar,
-        tabBarShowLabel: true,
+        tabBarShowLabel: false,
         headerStyle: {
           backgroundColor: isDarkTheme ? "#1A1A1A" : "#FFFFFF",
         },

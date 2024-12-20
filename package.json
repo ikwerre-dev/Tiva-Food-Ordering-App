@@ -10,8 +10,8 @@
     "web": "expo start --web"
   },
   "resolutions": {
-     "promise": "8.3.0"
-   },
+    "promise": "8.3.0"
+  },
   "dependencies": {
     "@expo-google-fonts/livvic": "^0.2.3",
     "@expo-google-fonts/poppins": "^0.2.3",
@@ -24,6 +24,7 @@
     "expo": "~52.0.18",
     "expo-av": "~15.0.1",
     "expo-dev-client": "~5.0.6",
+    "expo-direct-call": "github:aguglie/expo-direct-call",
     "expo-font": "~13.0.1",
     "expo-haptics": "~14.0.0",
     "expo-sensors": "~14.0.1",
