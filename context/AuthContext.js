@@ -47,7 +47,7 @@ export default function ContextProvider({ children }) {
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        <StatusBar showHideTransition={true} hidden barStyle="light-content" />
+        <StatusBar showHideTransition={true}   barStyle={ theme === 'dark' ? 'light-content' : 'dark-content'} />
         {children}
       </ThemeContext.Provider>
     </AuthContext.Provider>

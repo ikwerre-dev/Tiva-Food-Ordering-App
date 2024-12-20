@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Vibration } from "react-native";
 import { useCall } from "../context/CallContext";
 import { useNavigation } from "@react-navigation/native";
 import { Accelerometer } from "expo-sensors";
-import Icon from "react-native-vector-icons/FontAwesome"; // Import icons from react-native-vector-icons
+import Icon from "react-native-vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import {
   Poppins_400Regular,
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
-import * as Haptics from 'expo-haptics'; // Import Haptics for vibration
+import * as Haptics from 'expo-haptics';
 
 const CallNotification = () => {
   const [shakeDetected, setShakeDetected] = useState(false);
@@ -21,30 +21,36 @@ const CallNotification = () => {
     acceptCall,
     callStatus,
   } = useCall();
+  const navigation = useNavigation();
+
+  const [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_700Bold,
+    Livvic_400Regular,
+    Livvic_700Bold,
+  });
 
   useEffect(() => {
-    // Listen for accelerometer data to detect shake
     const subscription = Accelerometer.addListener((accelerometerData) => {
       const { x, y, z } = accelerometerData;
-      const threshold = 5; // You can adjust this value for sensitivity
-      // Check if the shake is strong enough
+      const threshold = 5;
       if (
         (Math.abs(x) > threshold ||
           Math.abs(y) > threshold ||
           Math.abs(z) > threshold) &&
         !shakeDetected
       ) {
-        setShakeDetected(true); // Set shakeDetected to true only once
+        setShakeDetected(true);
       }
     });
     return () => {
-      subscription.remove(); // Cleanup the listener
+      subscription.remove();
     };
   }, [shakeDetected]);
 
   useEffect(() => {
     if (shakeDetected) {
-      simulateIncomingCall(); // Simulate the incoming call after the first shake
+      simulateIncomingCall();
       const checkAcceptanceTimeout = setTimeout(() => {
         if (callStatus !== "accepted") {
           handleHangUp();
@@ -55,31 +61,51 @@ const CallNotification = () => {
     }
   }, [shakeDetected, callStatus, simulateIncomingCall, handleHangUp]);
 
-  const navigation = useNavigation();
+  useEffect(() => {
+    if (callStatus === "incoming") {
+      // Start vibration for incoming call
+      const vibrationPattern = [0, 1000, 1000];
+      Vibration.vibrate(vibrationPattern, true);
+    } else {
+      // Stop vibration when call status changes
+      Vibration.cancel();
+    }
+
+    return () => {
+      // Cleanup: stop vibration when component unmounts
+      Vibration.cancel();
+    };
+  }, [callStatus]);
 
   const pickCall = () => {
     acceptCall();
+    Vibration.cancel(); // Stop vibration when call is picked up
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); // Add haptic feedback
     navigation.navigate("CallScreen");
   };
 
-  if (callStatus !== "incoming") return null;
+  if (callStatus !== "incoming" || !fontsLoaded) return null;
 
   return (
     <View style={styles.container}>
       <View style={styles.subcontainer}>
         <Text style={styles.text}>Incoming call</Text>
-        <View style={{flexDirection: 'row', gap: 10}}>
+        <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "red" }]}
-            onPress={handleHangUp}
+            onPress={() => {
+              handleHangUp();
+              Vibration.cancel(); // Stop vibration when call is rejected
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error); // Add haptic feedback
+            }}
           >
-            <Icon name="times" size={20} color="white" /> 
+            <Icon name="times" size={20} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "green" }]}
             onPress={pickCall}
           >
-            <Icon name="phone" size={20} color="white" /> 
+            <Icon name="phone" size={20} color="white" />
           </TouchableOpacity>
         </View>
       </View>
@@ -110,6 +136,10 @@ const styles = StyleSheet.create({
     fontFamily: "Livvic_700Bold",
     paddingLeft: 10,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 10,
+  },
   button: {
     width: 50,
     height: 50,
@@ -121,3 +151,4 @@ const styles = StyleSheet.create({
 });
 
 export default CallNotification;
+

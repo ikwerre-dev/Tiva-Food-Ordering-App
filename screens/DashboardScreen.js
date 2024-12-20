@@ -153,6 +153,7 @@ const getStyles = (theme) =>
     filterButton: {
       backgroundColor: theme === "light" ? "#F5F5F5" : "#2A2A2A",
       padding: 20,
+      flexDirection: 'row',
       borderRadius: 15,
       justifyContent: "center",
       alignItems: "center",
@@ -470,7 +471,7 @@ export default function HomeScreen({ navigation }) {
               />
             </View>
             <TouchableOpacity style={styles.filterButton}>
-              <Icon name="filter" color="#DC2626" size={20} /><Text>{" "}</Text>
+              <Icon name="filter" color="#DC2626" size={20} /> 
               
             </TouchableOpacity>
           </View>
@@ -493,13 +494,11 @@ export default function HomeScreen({ navigation }) {
                 <View style={styles.restaurantCard}>
                   <View style={styles.ratingContainer}>
                     <Text style={styles.rating}>{restaurant.rating}</Text>
-                    <Icon name="star" color="#FFD700" size={12} /><Text>{" "}</Text>
-                    {/* Replaced Star icon */}
+                    <Icon name="star" color="#FFD700" size={12} />
                   </View>
 
                   <TouchableOpacity style={styles.favoriteButton}>
-                    <Icon name="heart" color="#fff" size={20} /><Text>{" "}</Text>
-                    {/* Replaced Heart icon */}
+                    <Icon name="heart" color="#fff" size={20} />
                   </TouchableOpacity>
                   <Image
                     source={{ uri: restaurant.image }}

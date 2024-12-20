@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Feather"; // Import FontAwesome icons
 import { ThemeContext } from "../context/AuthContext";
 import * as Haptics from "expo-haptics";
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Import screens
 import HomeScreen from "../screens/DashboardScreen";
 import ProfileScreen from "../screens/ProfileScreen";
@@ -37,6 +37,7 @@ const Stack = createStackNavigator();
 function TabNavigator() {
   const { theme } = useContext(ThemeContext);
   const { cart, removeFromCart } = useFoodContext();
+  const insets = useSafeAreaInsets();;
 
   const isDarkTheme = theme === "dark";
   let [fontsLoaded] = useFonts({
@@ -55,8 +56,8 @@ function TabNavigator() {
       backgroundColor: isDarkTheme ? "#1A1A1A" : "#FFFFFF",
       borderTopWidth: 1,
       borderTopColor: isDarkTheme ? "#333333" : "#E5E7EB",
-      height: Platform.OS === "android" ? 60 : 90,
-      paddingBottom: Platform.OS === "android" ? 8 : 30,
+      height: insets.bottom + 60,
+      // paddingBottom:  50,
       paddingHorizontal: 16,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: -2 },
