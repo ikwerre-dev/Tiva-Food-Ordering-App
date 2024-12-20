@@ -1,5 +1,6 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import Text from "react-native"
 import * as Sentry from "@sentry/react-native"; // Import Sentry
 import AuthContextProvider, { AuthContext } from "./context/AuthContext";
 import AuthStack from "./navigation/AuthStack";
@@ -39,8 +40,7 @@ function MainNavigator() {
 
 function FallbackComponent() {
   return (
-    <React.Fragment>
-      <Text>Something went wrong. Please restart the app.</Text>
-    </React.Fragment>
+    
+     "Something went wrong. Please restart the app. "
   );
 }

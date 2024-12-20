@@ -142,9 +142,9 @@ export default function FoodDetailsScreen({ navigation, route }) {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        color={theme === 'light' ? '#000' : '#fff'} size={24} />
-        
+        <Icon name="arrow-left" color={theme === 'light' ? '#000' : '#fff'} size={24} />
       </TouchableOpacity>
+
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         scrollEventThrottle={16}

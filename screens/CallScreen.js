@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   BackHandler,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather'; // Import Feather icons from react-native-vector-icons
+import Icon from 'react-native-vector-icons/Feather';
 import { ThemeContext } from '../context/AuthContext';
 import { useCall } from '../context/CallContext';
 import { useFonts } from 'expo-font';
@@ -96,6 +96,11 @@ const Call = ({ navigation }) => {
       justifyContent: 'center',
       alignItems: 'center',
     },
+    controlButtonText: {
+      fontSize: 12,
+      color: theme === 'light' ? '#000' : '#fff',
+      marginTop: 5,
+    },
     hangupButton: {
       width: 80,
       height: 80,
@@ -131,23 +136,27 @@ const Call = ({ navigation }) => {
             <View style={styles.row}>
               <TouchableOpacity style={styles.controlButton}>
                 <Icon name="volume-2" color={iconColor} size={iconSize} />
+                <Text style={styles.controlButtonText}>Volume</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.controlButton}>
                 <Icon name="pause" color={iconColor} size={iconSize} />
+                <Text style={styles.controlButtonText}>Pause</Text>
               </TouchableOpacity>
-              
               <TouchableOpacity style={styles.controlButton}>
                 <Icon name="mic" color={iconColor} size={iconSize} />
+                <Text style={styles.controlButtonText}>Mic</Text>
               </TouchableOpacity>
             </View>
-             
           </View>
         )}
         
-        <TouchableOpacity onPress={() => {
-          handleHangUp();
-          navigation.replace("MainTabs", { screen: "Orders" });
-        }} style={styles.hangupButton}>
+        <TouchableOpacity
+          onPress={() => {
+            handleHangUp();
+            navigation.replace("MainTabs", { screen: "Orders" });
+          }}
+          style={styles.hangupButton}
+        >
           <Icon name="phone-off" color="#fff" size={32} />
         </TouchableOpacity>
       </View>

@@ -73,13 +73,13 @@ const CallNotification = () => {
             style={[styles.button, { backgroundColor: "red" }]}
             onPress={handleHangUp}
           >
-            <Icon name="times" size={20} color="white" /> {/* Use times icon for hangup */}
+            <Icon name="times" size={20} color="white" /> 
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "green" }]}
             onPress={pickCall}
           >
-            <Icon name="phone" size={20} color="white" /> {/* Use phone icon for pickup */}
+            <Icon name="phone" size={20} color="white" /> 
           </TouchableOpacity>
         </View>
       </View>

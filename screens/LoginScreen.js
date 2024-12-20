@@ -28,10 +28,10 @@ export default function LoginScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      {/* Red Circle Decoration */}
+      
       <View style={styles.redCircle} />
       
-      {/* Back Button */}
+      
       <TouchableOpacity 
         style={styles.backButton}
         onPress={() => navigation.goBack()}

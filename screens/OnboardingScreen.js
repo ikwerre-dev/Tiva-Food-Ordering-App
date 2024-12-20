@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -34,22 +34,28 @@ const OnboardingScreen = ({ navigation }) => {
   const slidesRef = useRef(null);
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
-    setCurrentIndex(viewableItems[0]?.index || 0);
+    if (viewableItems[0]) {
+      setCurrentIndex(viewableItems[0].index);
+    }
   }).current;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
+  useEffect(() => {
+    if (slidesRef.current) {
+      slidesRef.current.scrollToIndex({ index: currentIndex, animated: true });
+    }
+  }, [currentIndex]);
+
   const scrollTo = () => {
     if (currentIndex < slides.length - 1) {
-      slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
+      setCurrentIndex(currentIndex + 1);
     } else {
-      // Navigate to the next screen
-      // console.log('Get Started');
-      navigation.push('SignUp')
+      navigation.push('SignUp');
     }
   };
 
-  const renderSlide = ({ item }) => {
+  const renderSlide = ({ item, index }) => {
     return (
       <View style={styles.slide}>
         <ImageBackground source={item.image} style={styles.image}>
@@ -58,12 +64,12 @@ const OnboardingScreen = ({ navigation }) => {
             <Text style={styles.subtitle}>{item.subtitle}</Text>
             <View style={styles.bottomContainer}>
               <View style={styles.pagination}>
-                {slides.map((_, index) => (
+                {slides.map((_, dotIndex) => (
                   <View
-                    key={index}
+                    key={dotIndex}
                     style={[
                       styles.dot,
-                      index === currentIndex ? styles.activeDot : styles.inactiveDot,
+                      dotIndex === index ? styles.activeDot : styles.inactiveDot,
                     ]}
                   />
                 ))}
@@ -80,7 +86,7 @@ const OnboardingScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar showHideTransition={true} hidden barStyle="light-content" />
+      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       <FlatList
         ref={slidesRef}
         data={slides}
@@ -92,6 +98,14 @@ const OnboardingScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         onViewableItemsChanged={viewableItemsChanged}
         viewabilityConfig={viewConfig}
+        initialNumToRender={1}
+        maxToRenderPerBatch={1}
+        windowSize={2}
+        getItemLayout={(_, index) => ({
+          length: width,
+          offset: width * index,
+          index,
+        })}
       />
     </View>
   );
@@ -162,3 +176,4 @@ const styles = StyleSheet.create({
 });
 
 export default OnboardingScreen;
+

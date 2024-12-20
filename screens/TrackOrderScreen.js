@@ -332,8 +332,8 @@ const TrackOrderScreen = ({ navigation }) => {
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <View style={styles.backButton}>
-              <Icon name="chevron-left" color="#fff" size={24} />{" "}
-              {/* Replaced ChevronLeft */}
+              <Icon name="chevron-left" color="#fff" size={24} /><Text>{" "}</Text>
+              
             </View>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Track Order</Text>
@@ -341,7 +341,7 @@ const TrackOrderScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("Notification")}
             style={styles.iconButton}
           >
-            <Icon name="bell" color="#fff" size={24} /> {/* Replaced Bell */}
+            <Icon name="bell" color="#fff" size={24} />  
           </TouchableOpacity>
         </View>
 

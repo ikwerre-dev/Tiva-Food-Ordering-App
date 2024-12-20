@@ -37,7 +37,7 @@ const AddNewAddress = ({ navigation }) => {
       >
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="chevron-left" color={theme === 'light' ? '#000' : '#fff'} size={24} />
+            <Icon name="chevron-left"  color={theme === 'light' ? '#000' : '#fff'} size={24} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Add new address</Text>
         </View>
@@ -103,65 +103,77 @@ const getStyles = (theme) => StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    paddingTop: 40,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 40,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: theme === 'light' ? '#E0E0E0' : '#2C2C2C',
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'Livvic_700Bold',
     color: theme === 'light' ? '#000' : '#fff',
-    marginLeft: 10,
+    marginLeft: 20,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    padding: 20,
+    paddingBottom: 100, // Extra padding to account for the fixed save button
   },
   inputContainer: {
-    width: '90%',
     marginBottom: 20,
   },
   label: {
-    fontFamily: 'Livvic_700Bold',
-    fontSize: 16,
-    color: theme === 'light' ? '#000' : '#fff',
-    marginBottom: 10,
+    fontSize: 14,
+    fontFamily: 'Livvic_400Regular',
+    color: theme === 'light' ? '#666' : '#999',
+    marginBottom: 5,
   },
   selectButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 15,
+    alignItems: 'center',
     borderWidth: 1,
-    borderColor: theme === 'light' ? '#ddd' : '#444',
-    borderRadius: 5,
-    backgroundColor: theme === 'light' ? '#fff' : '#333',
+    borderColor: theme === 'light' ? '#E0E0E0' : '#2C2C2C',
+    borderRadius: 8,
+    padding: 15,
   },
   selectButtonText: {
+    fontSize: 16,
     fontFamily: 'Livvic_400Regular',
-    fontSize: 14,
     color: theme === 'light' ? '#000' : '#fff',
   },
   input: {
-    padding: 15,
     borderWidth: 1,
-    borderColor: theme === 'light' ? '#ddd' : '#444',
-    borderRadius: 5,
-    backgroundColor: theme === 'light' ? '#fff' : '#333',
+    borderColor: theme === 'light' ? '#E0E0E0' : '#2C2C2C',
+    borderRadius: 8,
+    padding: 15,
+    fontSize: 16,
+    fontFamily: 'Livvic_400Regular',
     color: theme === 'light' ? '#000' : '#fff',
+    backgroundColor: theme === 'light' ? '#fff' : '#1A1B1E',
   },
   saveButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: '#f44336',
+    borderRadius: 8,
     padding: 15,
-    backgroundColor: '#4CAF50',
-    borderRadius: 5,
-    width: '90%',
     alignItems: 'center',
-    marginTop: 20,
   },
   saveButtonText: {
-    fontFamily: 'Livvic_700Bold',
-    fontSize: 16,
     color: '#fff',
+    fontSize: 16,
+    fontFamily: 'Livvic_700Bold',
   },
 });
 
 export default AddNewAddress;
+

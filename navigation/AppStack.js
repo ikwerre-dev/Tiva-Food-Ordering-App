@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, StyleSheet, Text, Platform } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import Icon from "react-native-vector-icons/FontAwesome"; // Import FontAwesome icons
+import Icon from "react-native-vector-icons/Feather"; // Import FontAwesome icons
 import { ThemeContext } from "../context/AuthContext";
 import * as Haptics from "expo-haptics";
 
@@ -23,6 +23,13 @@ import PaymentMethod from "../screens/PaymentMethod";
 import NotificationScreen from "../screens/Notification";
 import CallScreen from "../screens/CallScreen";
 import WalletScreen from "../screens/WalletScreen";
+import { useFonts } from "expo-font";
+import {
+  Poppins_400Regular,
+  Poppins_700Bold,
+} from "@expo-google-fonts/poppins";
+import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
+import AppLoading from "../components/Loader";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -32,31 +39,53 @@ function TabNavigator() {
   const { cart, removeFromCart } = useFoodContext();
 
   const isDarkTheme = theme === "dark";
+  let [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_700Bold,
+    Livvic_400Regular,
+    Livvic_700Bold,
+  });
 
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+  
   const styles = StyleSheet.create({
     tabBar: {
       backgroundColor: isDarkTheme ? "#1A1A1A" : "#FFFFFF",
-      borderTopWidth: 0,
-      height: Platform.OS === "android" ? 60 : 90, // Dynamic height for Android and iPhone
-      paddingBottom: Platform.OS === "android" ? 10 : 20, // Adjust padding for consistency
-      paddingHorizontal: 20,
+      borderTopWidth: 1,
+      borderTopColor: isDarkTheme ? "#333333" : "#E5E7EB",
+      height: Platform.OS === "android" ? 60 : 90,
+      paddingBottom: Platform.OS === "android" ? 8 : 30,
+      paddingHorizontal: 16,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: -2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+      elevation: 5,
+    },
+    tabBarIcon: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: Platform.OS === "android" ? 10 : 0,
     },
     tabBarBadge: {
       backgroundColor: "#DC2626",
       color: "#FFFFFF",
-      fontSize: 12,
-      minWidth: 18,
-      height: 18,
-      borderRadius: 9,
-      paddingHorizontal: 6,
+      fontSize: 10,
+      minWidth: 16,
+      height: 16,
+      borderRadius: 8,
+      paddingHorizontal: 4,
       textAlign: "center",
-      lineHeight: 18,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      lineHeight: 16,
       position: "absolute",
-      top: -8,
-      right: -12,
-    },
-    tabBarIcon: {
-      marginTop: 26, // Increased from 5 to 10
+      top: -4,
+      right: -8,
+      fontFamily: "Livvic_700Bold"
     },
   });
 
@@ -64,76 +93,53 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color }) => {
-          const iconSize = 28; // Adjusted icon size
-          let icon;
+          const iconSize = 24;
+          let iconName;
 
           switch (route.name) {
             case "Home":
-              icon = (
-                <View style={styles.tabBarIcon}>
-                  <Icon
-                    name="home"
-                    size={iconSize}
-                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
-                  />
-                </View>
-              );
+              iconName = "home";
               break;
             case "Cart":
-              icon = (
-                <View style={styles.tabBarIcon}>
-                  <Icon
-                    name="shopping-bag"
-                    size={iconSize}
-                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
-                  />
-                  {cart && cart.length > 0 && (
-                    <View style={styles.tabBarBadge}>
-                      <Text style={{ color: "#FFFFFF" }}>{cart.length}</Text>
-                    </View>
-                  )}
-                </View>
-              );
-              break;
-            case "Favorites":
-              icon = (
-                <View style={styles.tabBarIcon}>
-                  <Icon
-                    name="heart"
-                    size={iconSize}
-                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
-                    fill={focused ? "#DC2626" : "none"}
-                  />
-                </View>
-              );
+              iconName = "shopping-bag";
               break;
             case "Orders":
-              icon = (
-                <View style={styles.tabBarIcon}>
-                  <Icon
-                    name="compass"
-                    size={iconSize}
-                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
-                  />
-                </View>
-              );
+              iconName = "compass";
               break;
             case "Wallet":
-              icon = (
-                <View style={styles.tabBarIcon}>
-                  <Icon
-                    name="wallet"
-                    size={iconSize}
-                    color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
-                  />
-                </View>
-              );
+              iconName = "credit-card";
               break;
           }
-          return icon;
+
+          return (
+            <View style={styles.tabBarIcon}>
+              <Icon
+                name={iconName}
+                size={iconSize}
+                color={focused ? "#DC2626" : isDarkTheme ? "#9CA3AF" : "#6B7280"}
+              />
+              {route.name === "Cart" && cart && cart.length > 0 && (
+                <View style={styles.tabBarBadge}>
+                  <Text style={{ color: "#FFFFFF", fontSize: 10, fontWeight: 'bold',fontFamily: "Livvic_700Bold" }}>{cart.length}</Text>
+                </View>
+              )}
+            </View>
+          );
         },
+        tabBarLabel: ({ focused, color }) => (
+          <Text style={{
+            fontSize: 10,
+            fontWeight: '500',
+            color: focused ? "#DC2626" : color,
+            marginBottom: Platform.OS === "android" ? 4 : 0,
+            fontFamily: "Livvic_700Bold"
+            
+          }}>
+            {route.name}
+          </Text>
+        ),
         tabBarStyle: styles.tabBar,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
         headerStyle: {
           backgroundColor: isDarkTheme ? "#1A1A1A" : "#FFFFFF",
         },
@@ -167,6 +173,15 @@ function TabNavigator() {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
         }}
       />
+      {/* <Tab.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{ headerShown: false }}
+        listeners={{
+          tabPress: () =>
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+        }}
+      /> */}
       <Tab.Screen
         name="Wallet"
         component={WalletScreen}
@@ -246,3 +261,4 @@ export default function AppStack() {
     </Stack.Navigator>
   );
 }
+

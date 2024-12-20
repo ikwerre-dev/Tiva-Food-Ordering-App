@@ -434,7 +434,7 @@ export default function HomeScreen({ navigation }) {
               ) : (
                 <Icon
                   name="moon"
-                  color={theme === "light" ? "#fff" : "#000"}
+                  color={theme === "light" ? "#fff" : "#fff"}
                   size={24}
                 />
               )}
@@ -461,8 +461,8 @@ export default function HomeScreen({ navigation }) {
 
           <View style={styles.searchContainer}>
             <View style={styles.searchBar}>
-              <Icon name="search" color="#666" size={20} />{" "}
-              {/* Replaced Search icon */}
+              <Icon name="search" color="#666" size={20} /><Text>{" "}</Text>
+              
               <TextInput
                 style={styles.searchInput}
                 placeholder="Find food or restaurant..."
@@ -470,8 +470,8 @@ export default function HomeScreen({ navigation }) {
               />
             </View>
             <TouchableOpacity style={styles.filterButton}>
-              <Icon name="filter" color="#DC2626" size={20} />{" "}
-              {/* Replaced ListFilter icon */}
+              <Icon name="filter" color="#DC2626" size={20} /><Text>{" "}</Text>
+              
             </TouchableOpacity>
           </View>
 
@@ -493,12 +493,12 @@ export default function HomeScreen({ navigation }) {
                 <View style={styles.restaurantCard}>
                   <View style={styles.ratingContainer}>
                     <Text style={styles.rating}>{restaurant.rating}</Text>
-                    <Icon name="star" color="#FFD700" size={12} />{" "}
+                    <Icon name="star" color="#FFD700" size={12} /><Text>{" "}</Text>
                     {/* Replaced Star icon */}
                   </View>
 
                   <TouchableOpacity style={styles.favoriteButton}>
-                    <Icon name="heart" color="#fff" size={20} />{" "}
+                    <Icon name="heart" color="#fff" size={20} /><Text>{" "}</Text>
                     {/* Replaced Heart icon */}
                   </TouchableOpacity>
                   <Image
@@ -517,7 +517,7 @@ export default function HomeScreen({ navigation }) {
                       )}
                     </View>
                     <Text style={styles.pricetagText}>
-                      {" "}
+                      <Text>{" "}</Text>
                       {"₦"}
                       {restaurant.price && restaurant.price.toFixed(2)}
                       {" • "}
@@ -530,7 +530,7 @@ export default function HomeScreen({ navigation }) {
                     <View style={styles.mypricetags}>
                       <View style={styles.mypricetag}>
                         <Text style={styles.mypricetagText}>
-                          {" "}
+                          <Text>{" "}</Text>
                           {"₦"}
                           {restaurant.price && restaurant.price.toFixed(2)}
                         </Text>
@@ -575,7 +575,7 @@ export default function HomeScreen({ navigation }) {
                         >
                           <View style={styles.foodCourtCard}>
                             <TouchableOpacity style={styles.favoriteButton}>
-                              <Heart color="#fff" size={20} />
+                              <Icon name="heart"  color="#fff" size={20} />
                             </TouchableOpacity>
                             <Image
                               source={{ uri: restaurant.image }}
@@ -634,10 +634,10 @@ export default function HomeScreen({ navigation }) {
                               <Text style={styles.rating}>
                                 {restaurant.rating}
                               </Text>
-                              <Star fill="#FFD700" color="#FFD700" size={12} />
+                              <Icon name="star" fill="#FFD700" color="#FFD700" size={12} />
                             </View>
                             <TouchableOpacity style={styles.favoriteButton}>
-                              <Heart color="#fff" size={20} />
+                              <Icon name="heart"  color="#fff" size={20} />
                             </TouchableOpacity>
                             <Image
                               source={{ uri: restaurant.image }}
@@ -655,7 +655,7 @@ export default function HomeScreen({ navigation }) {
                                 )}
                               </View>
                               <Text style={styles.pricetagText}>
-                                {" "}
+                                <Text>{" "}</Text>
                                 {"₦"}
                                 {restaurant.price &&
                                   restaurant.price.toFixed(2)}
@@ -669,7 +669,7 @@ export default function HomeScreen({ navigation }) {
                               <View style={styles.mypricetags}>
                                 <View style={styles.mypricetag}>
                                   <Text style={styles.mypricetagText}>
-                                    {" "}
+                                    <Text>{" "}</Text>
                                     {"₦"}
                                     {restaurant.price &&
                                       restaurant.price.toFixed(2)}
