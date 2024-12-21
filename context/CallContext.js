@@ -1,143 +1,279 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
-import { Audio } from "expo-av";
-import * as Haptics from "expo-haptics"; // Import Haptics for vibration
-import incomingSound from "../assets/audio/incoming.mp3";
-import OutboundSound from "../assets/audio/outbound.mp3";
+import React, { createContext, useState, useContext, useCallback, useEffect, useRef } from "react";
+import * as Haptics from "expo-haptics";
+import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
+
 const CallContext = createContext();
-export const useCall = () => useContext(CallContext);
 
-export const CallProvider = ({ children }) => {
+// Dummy user data
+const dummyUser = {
+  userId: 'user_123',
+  username: 'user_123',
+  password: 'password123', // In a real app, never store passwords in plain text
+  fullname: 'Robinson Honour',
+  role: 'driver'
+};
+
+export const CallProvider = ({ children, navigation }) => {
   const [callStatus, setCallStatus] = useState("idle");
-  const [callDuration, setCallDuration] = useState(0);
-  const soundRef = useRef(null);
-  const timerRef = useRef(null);
-  const incomingCallTimerRef = useRef(null);
+  const [currentCall, setCurrentCall] = useState(null);
+  const [user, setUser] = useState(null);
+  const ws = useRef(null);
+  const [audioStatus, setAudioStatus] = useState(null);
+  const audioRecording = useRef(null);
+  const audioPlayer = useRef(null);
 
-  const cleanupCall = useCallback(() => {
-    // Vibrate on hangup
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-    if (incomingCallTimerRef.current) {
-      clearTimeout(incomingCallTimerRef.current);
-      incomingCallTimerRef.current = null;
-    }
-    if (soundRef.current) {
-      soundRef.current.unloadAsync();
-      soundRef.current = null;
-    }
-    setCallDuration(0);
-    setCallStatus("idle");
+  useEffect(() => {
+    initializeWebSocket();
+    return () => {
+      if (ws.current) {
+        ws.current.close();
+      }
+    };
   }, []);
 
-  const initiateCall = useCallback(async () => {
-    // Clean up any existing call
+  const initializeWebSocket = () => {
+    ws.current = new WebSocket('ws://192.168.1.115:8080');
+    
+    ws.current.onopen = () => {
+      console.log('WebSocket connected');
+      login(dummyUser.username, dummyUser.password);
+    };
 
-    cleanupCall();
-    setCallDuration(0);
-    setCallStatus("connecting");
+    ws.current.onmessage = handleWebSocketMessage;
 
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        OutboundSound,
-      );
-      soundRef.current = sound;
-      await sound.playAsync();
+    ws.current.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
 
-      // Simulate connecting for 5 seconds
-      setTimeout(() => {
-        setCallStatus("connecting");
-        sound.stopAsync();
+    ws.current.onclose = () => {
+      console.log('WebSocket disconnected');
+      // Implement reconnection logic here
+    };
+  };
 
-        // Simulate connecting for 2 seconds
-        setTimeout(() => {
-          setCallStatus("active");
-          // Start the call duration timer
-          timerRef.current = setInterval(() => {
-            setCallDuration((prevDuration) => prevDuration + 1);
-          }, 1000);
-        }, 2000);
-      }, 500);
-    } catch (error) {
-      console.error("Error initiating call:", error);
-      cleanupCall();
+  const handleWebSocketMessage = async (event) => {
+    const data = JSON.parse(event.data);
+    console.log('Received WebSocket message:', data);
+
+    switch (data.type) {
+      case 'login-success':
+        handleLoginSuccess(data);
+        break;
+      case 'login-failed':
+        handleLoginFailed(data);
+        break;
+      case 'incoming-call':
+        handleIncomingCall(data);
+        break;
+      case 'call-answer':
+        handleCallAnswer(data);
+        break;
+      case 'call-end':
+        handleCallEnd(data);
+        break;
+      case 'audio-data':
+        await handleAudioData(data);
+        break;
+      case 'call-request':
+        handleIncomingCall(data);
+        break;
     }
-  }, [cleanupCall]);
+  };
 
-  const simulateIncomingCall = useCallback(async () => {
-    // Clean up any existing call
-    cleanupCall();
+  const handleLoginSuccess = (data) => {
+    setUser({
+      userId: data.userId,
+      username: data.username,
+      fullname: data.fullname,
+      role: data.role
+    });
+    console.log('Login successful:', data);
+  };
 
-    // Set status to incoming after 5 seconds
-    incomingCallTimerRef.current = setTimeout(() => {
-      setCallStatus("incoming");
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  const handleLoginFailed = (data) => {
+    console.error('Login failed:', data.message);
+    // Implement error handling, e.g., show an alert to the user
+  };
 
-      // Play incoming call sound
-      Audio.Sound.createAsync(incomingSound).then(
-        ({ sound }) => {
-          soundRef.current = sound;
-          sound.playAsync();
-        },
-      );
-    }, 500);
-  }, [cleanupCall]);
+  const handleIncomingCall = (data) => {
+    console.log('Incoming call:', data);
+    setCurrentCall({
+      from: data.from,
+      username: data.username,
+      fullname: data.fullname,
+      role: data.role,
+      status: 'incoming'
+    });
+    setCallStatus("incoming");
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  };
+
+  const handleCallAnswer = (data) => {
+    if (data.answer) {
+      setCallStatus("active");
+    } else {
+      handleHangUp();
+    }
+  };
+
+  const handleCallEnd = () => {
+    handleHangUp();
+  };
+
+  const login = useCallback((username, password) => {
+    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+      ws.current.send(JSON.stringify({
+        type: 'login',
+        username,
+        password
+      }));
+    } else {
+      console.error('WebSocket is not connected');
+    }
+  }, []);
+
+  const sendCallRequest = useCallback((targetUserId) => {
+    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+      console.log('Sending call request to:', targetUserId);
+      ws.current.send(JSON.stringify({
+        type: 'call-request',
+        targetUserId,
+        from: user.userId,
+        username: user.username,
+        fullname: user.fullname,
+        role: user.role
+      }));
+      setCurrentCall({ targetUserId, status: 'calling' });
+      setCallStatus('calling');
+    } else {
+      console.error('WebSocket is not connected');
+    }
+  }, [user]);
+
+  const startCall = useCallback((targetUserId) => {
+    sendCallRequest(targetUserId);
+    const callData = {
+      targetUserId,
+      userId: user.userId,
+      username: user.username,
+      fullname: user.fullname,
+      role: user.role
+    };
+    navigation.navigate('CallScreen', { callData });
+  }, [user, navigation, sendCallRequest]);
 
   const acceptCall = useCallback(async () => {
+    if (callStatus === "incoming" && currentCall) {
+      ws.current.send(JSON.stringify({
+        type: 'call-response',
+        targetUserId: currentCall.from,
+        answer: true
+      }));
+      setCallStatus("active");
+      await startAudioRecording();
+    }
+  }, [callStatus, currentCall]);
+
+  const declineCall = useCallback(() => {
     if (callStatus === "incoming") {
-      // Stop incoming call sound
-      if (soundRef.current) {
-        await soundRef.current.stopAsync();
-      }
-
-      // Set status to active and start call duration timer
-      setCallStatus("incoming");
-
-      setCallDuration(0)
+      ws.current.send(JSON.stringify({
+        type: 'call-response',
+        targetUserId: currentCall.from,
+        answer: false
+      }));
+      setCallStatus("idle");
+      setCurrentCall(null);
     }
-  }, [callStatus]);
+  }, [callStatus, currentCall]);
 
-  const handleHangUp = useCallback(() => {
-    cleanupCall();
-  }, [cleanupCall]);
-
-  useEffect(() => {
-    if (callStatus !== "active") {
-      setCallDuration(0);
+  const handleHangUp = useCallback(async () => {
+    if (currentCall) {
+      ws.current.send(JSON.stringify({
+        type: 'call-end',
+        targetUserId: currentCall.from || currentCall.targetUserId
+      }));
     }
-  }, [callStatus]);
+    setCallStatus("idle");
+    setCurrentCall(null);
+    await stopAudioRecording();
+    if (audioPlayer.current) {
+      await audioPlayer.current.unloadAsync();
+    }
+  }, [currentCall]);
 
-  useEffect(() => {
-    // Cleanup on unmount
-    return () => {
-      cleanupCall();
-    };
-  }, [cleanupCall]);
+  const startAudioRecording = async () => {
+    try {
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      audioRecording.current = recording;
+      setAudioStatus('recording');
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
+  };
+
+  const stopAudioRecording = async () => {
+    if (audioRecording.current) {
+      await audioRecording.current.stopAndUnloadAsync();
+      const uri = audioRecording.current.getURI();
+      audioRecording.current = null;
+      setAudioStatus('stopped');
+      return uri;
+    }
+  };
+
+  const sendAudioData = useCallback(async () => {
+    if (audioStatus === 'recording' && currentCall) {
+      const uri = await stopAudioRecording();
+      const base64Audio = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+      ws.current.send(JSON.stringify({
+        type: 'audio-data',
+        targetUserId: currentCall.from || currentCall.targetUserId,
+        data: base64Audio
+      }));
+      await startAudioRecording();
+    }
+  }, [audioStatus, currentCall]);
+
+  const handleAudioData = async (data) => {
+    if (audioPlayer.current) {
+      await audioPlayer.current.unloadAsync();
+    }
+    const { sound } = await Audio.Sound.createAsync({ uri: `data:audio/wav;base64,${data.data}` });
+    audioPlayer.current = sound;
+    await audioPlayer.current.playAsync();
+  };
+
+  const getUserCredentials = useCallback(() => {
+    return user ? { userId: user.userId, username: user.username, password: dummyUser.password } : null;
+  }, [user]);
 
   return (
     <CallContext.Provider
       value={{
         callStatus,
-        setCallStatus,
-        callDuration,
-        setCallDuration,
-        initiateCall,
-        handleHangUp,
-        simulateIncomingCall,
+        currentCall,
+        user,
         acceptCall,
+        declineCall,
+        handleHangUp,
+        startCall,
+        sendAudioData,
+        sendCallRequest,
+        getUserCredentials,
       }}
     >
       {children}
     </CallContext.Provider>
   );
 };
+
+export const useCall = () => useContext(CallContext);
+

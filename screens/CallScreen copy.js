@@ -16,7 +16,7 @@ import { Livvic_400Regular, Livvic_700Bold } from '@expo-google-fonts/livvic';
 
 const Call = ({ navigation }) => {
   const { theme } = useContext(ThemeContext);
-  const { callStatus, callDuration, handleHangUp } = useCall();
+  const { callStatus, callDuration, initiateCall, handleHangUp } = useCall();
 
   let [fontsLoaded] = useFonts({
     Livvic_400Regular,
@@ -28,12 +28,13 @@ const Call = ({ navigation }) => {
       "hardwareBackPress",
       () => true // Prevent the default back action
     );
- 
+
+    initiateCall();
 
     return () => {
       backHandler.remove();
     };
-  }, []);
+  }, [initiateCall]);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -130,7 +131,7 @@ const Call = ({ navigation }) => {
         
         <Text style={styles.riderName}>RIDER</Text>
         
-        {callStatus != 'active' && (
+        {callStatus === 'active' && (
           <View style={styles.controlsContainer}>
             <View style={styles.row}>
               <TouchableOpacity style={styles.controlButton}>
