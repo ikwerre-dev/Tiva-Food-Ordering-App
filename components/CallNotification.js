@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useCall } from "../context/CallContext";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Poppins_400Regular, Poppins_700Bold } from "@expo-google-fonts/poppins";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
 import * as Haptics from "expo-haptics";
+import { useCall } from "../context/CallContext";
 
 const CallNotification = () => {
   const { currentCall, declineCall, acceptCall } = useCall();

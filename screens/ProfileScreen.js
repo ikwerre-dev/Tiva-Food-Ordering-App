@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -22,13 +22,35 @@ import AppLoading from "../components/Loader";
 
 const { width } = Dimensions.get("window");
 import profileBanner from "../assets/profilebanner.png";
+import jwt_decode from 'jwt-decode'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Profile = ({ navigation }) => {
   const { theme } = useContext(ThemeContext);
+  const [fullname, setFullname] = useState('...')
+  const [email, setemail] = useState('...')
+  const [phone, setphone] = useState("...")
 
   let [fontsLoaded] = useFonts({
     Livvic_400Regular,
     Livvic_700Bold,
   });
+
+  useEffect(() => {
+    const main = async () => {
+      try {
+        const main = await AsyncStorage.getItem('token')
+        const decodedToken = jwt_decode(main)
+        console.log("DecodedToken: ", decodedToken)
+        const {fullname, email, phoneNumber} = decodedToken
+        setFullname(fullname)
+        setemail(email)
+        setphone(phoneNumber)
+      } catch (error) {
+        console.log("error: ", error)
+      }
+    }
+    main()
+  }, [])
 
   if (!fontsLoaded) {
     return <AppLoading />;
@@ -64,7 +86,7 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.name}>Robinson Honour</Text>
+          <Text style={styles.name}>{fullname}</Text>
           <Text style={styles.editProfile}>Edit Profile</Text>
 
           <View style={styles.form}>
@@ -72,7 +94,8 @@ const Profile = ({ navigation }) => {
               <Text style={styles.label}>Full name</Text>
               <TextInput
                 style={styles.input}
-                value="Robinson Honour"
+                value={fullname}
+                editable={false}
                 placeholderTextColor={theme === "light" ? "#666" : "#888"}
               />
             </View>
@@ -81,7 +104,7 @@ const Profile = ({ navigation }) => {
               <Text style={styles.label}>E-mail</Text>
               <TextInput
                 style={styles.input}
-                value="robinsonhonour@gmail.com"
+                value={email}
                 placeholderTextColor={theme === "light" ? "#666" : "#888"}
                 keyboardType="email-address"
               />
@@ -91,7 +114,7 @@ const Profile = ({ navigation }) => {
               <Text style={styles.label}>Phone Number</Text>
               <TextInput
                 style={styles.input}
-                value="+2349163169949"
+                value={phone}
                 placeholderTextColor={theme === "light" ? "#666" : "#888"}
                 keyboardType="phone-pad"
               />

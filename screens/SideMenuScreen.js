@@ -13,10 +13,8 @@ export default function SideMenuScreen({ navigation }) {
   const menuItems = [
     { icon: 'shopping-bag', title: 'My Orders' },
     { icon: 'user', title: 'My Profile' },
-    { icon: 'map-pin', title: 'Delivery Address' },
     { icon: 'credit-card', title: 'Payment Methods' },
     { icon: 'sun', title: 'Light Mode' },
-    { icon: 'star', title: 'Your Ratings' },
     { icon: 'log-out', title: 'Log Out' },
   ];
   

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   Image,
   SafeAreaView,
   Dimensions,
+  RefreshControl,
+  Alert,
 } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
 import { useFonts } from "expo-font";
@@ -14,10 +16,14 @@ import {
   Poppins_400Regular,
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
+import jwt_decode from 'jwt-decode'
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
 import AppLoading from '../components/Loader';
 import { ThemeContext } from "../context/AuthContext";
 import { ScrollView } from "react-native";
+import { BASE_URL } from "../config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 
@@ -70,7 +76,12 @@ const OrderCard = ({
   status,
   onCancel,
   onTrack,
+  cancelingOrders,
+  cancelOrder,
   theme,
+  restaurantLogo,
+  price,
+  restaurantName,
 }) => {
   const styles = getStyles(theme);
   return (
@@ -78,13 +89,13 @@ const OrderCard = ({
       <View style={styles.orderHeader}>
         <View style={styles.restaurantInfo}>
           <Image
-            source={{ uri: "https://indulgetix.com/tiva/1.png" }}
+            source={{ uri: restaurantLogo }}
             style={styles.restaurantLogo}
           />
           <View style={styles.orderDetails}>
-            <Text style={styles.itemCount}>{items} Items</Text>
+            <Text style={styles.itemCount}>{items} Item(s)</Text>
             <View style={styles.restaurantName}>
-              <Text style={styles.restaurantText}>Chicken Republic</Text>
+              <Text style={styles.restaurantText}>{restaurantName}</Text>
               <View style={styles.verifiedBadge} />
             </View>
           </View>
@@ -94,33 +105,44 @@ const OrderCard = ({
 
       <View style={styles.estimatedTimeContainer}>
         <View>
-          <Text style={styles.estimatedLabel}>Estimated Arrival</Text>
+          <Text style={styles.estimatedLabel}>Price</Text>
           <View style={styles.timeContainer}>
-            <Text style={styles.timeNumber}>{estimatedTime}</Text>
-            <Text style={styles.timeUnit}>min</Text>
+            <Text style={styles.timeNumber}>N </Text>
+            <Text style={styles.timeNumber}>{price}</Text>
           </View>
         </View>
         <Text style={styles.statusText}>
-          {status === "delivered" ? "Delivered" : "Food on the way"}
+          {status === "ongoing" || status === "waiting" 
+            ? "Food on the way" 
+            : status === "canceled" 
+            ? "Canceled" 
+            : "Delivered"}
         </Text>
+
       </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-          <Text style={styles.cancelButtonText}>Cancel</Text>
+      {status === "ongoing" || status === "waiting" && (
+        <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.cancelButton} onPress={() => cancelOrder(orderNumber)} disabled={cancelingOrders[orderNumber]}>
+          <Text style={styles.cancelButtonText}>{cancelingOrders[orderNumber] ? "Cancelling..." : "Cancel"}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.trackButton} onPress={onTrack}>
           <Text style={styles.trackButtonText}>Track Order</Text>
         </TouchableOpacity>
       </View>
+      )}
     </View>
   );
 };
 
-const OrdersScreen = ({ navigation }) => {
+const OrdersScreen = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
   const { theme } = useContext(ThemeContext);
+  const [orders, setOrders] = useState([])
+  const [cancelingOrders, setcancelingOrders] = useState({})
+  const [loading, setloading] = useState(true)
   const styles = getStyles(theme);
+  const navigation = useNavigation()
 
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
@@ -128,6 +150,98 @@ const OrdersScreen = ({ navigation }) => {
     Livvic_400Regular,
     Livvic_700Bold,
   });
+
+  const fetchOrderedItems = async () => {
+    setloading(true)
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        console.warn("No token found in storage");
+        return;
+      }
+
+      const decodedToken = jwt_decode(token);
+      if (!decodedToken || !decodedToken.userid) {
+        console.warn("Invalid token structure");
+        return;
+      }
+
+      const { userid } = decodedToken;
+
+      // Fetch ordered items from backend using user_id from token
+      const response = await fetch(`${BASE_URL}/ordered_items`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id: userid }),  // Send user_id in the request body
+      });
+
+      if (!response.ok) {
+        console.log("Failed to fetch ordered items");
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.status === 200) {
+        setOrders(data.data);  // Assuming backend sends an array of ordered items
+      } else {
+        console.log("Failed to retrieve ordered items:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching ordered items:", error);
+    } finally {
+      setloading(false);  // Hide loading indicator after the request completes
+    }
+  };
+
+  useEffect(() => {
+    fetchOrderedItems();
+  }, []);
+
+  const cancelOrder = async (orderId) => {
+    setcancelingOrders((prev) => ({ ...prev, [orderId]: true }));
+    try {
+      console.log("ORder: ", orderId)
+      const token = await AsyncStorage.getItem("token")
+      const decodedToken = await jwt_decode(token)
+      const {userid} = decodedToken
+      const response = await fetch(`${BASE_URL}/cancel_order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userid,
+          order_id: orderId,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Remove the canceled order from the orders array
+        console.log("Data: ", data)
+        setOrders((prevOrders) =>
+          prevOrders.map(order =>
+            order.id === orderId ? { ...order, status: "canceled" } : order
+          )
+        );
+        
+        Alert.alert('Order canceled successfully');
+      } else {
+        Alert.alert(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      Alert.alert('Failed to cancel order. Please try again.');
+      console.error('Cancel order error:', error);
+    } finally {
+      // Reset canceling state for this order
+      setcancelingOrders((prev) => ({ ...prev, [orderId]: false }));
+    }
+  };
+  
 
   if (!fontsLoaded) {
     return <AppLoading />;
@@ -165,8 +279,89 @@ const OrdersScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.content}>
-          {ordersData.map((order,index) => (
+        <ScrollView
+          style={styles.content}
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={fetchOrderedItems} // Trigger the fetch function when user pulls to refresh
+            />
+          }
+        >
+          {orders.length > 0 && !loading ? (
+            // Filter orders based on activeTab
+            orders
+              .filter((order) => 
+                activeTab === 'history' 
+                  ? order.status === 'delivered' || order.status === 'canceled' // Show only delivered orders for history
+                  : order.status === 'waiting' || order.status === 'ongoing' // Show waiting or ongoing orders for upcoming
+              )
+              .map((order, index) => (
+                <OrderCard
+                  key={index}
+                  re={order.name}
+                  address={order.item_description.address}
+                  orderNumber={order.id}
+                  items={order.quantity}
+                  restaurantName={order.item_name}
+                  estimatedTime={'30'}
+                  restaurantLogo={order.item_description.image}
+                  price={order.price}
+                  cancelOrder={cancelOrder}
+                  status={order.status}
+                  cancelingOrders={cancelingOrders}
+                  onTrack={async () => {
+                    console.log("Tracking order: ", order)
+                    const main = async () => {
+                      try {
+                        const response = await fetch(`${BASE_URL}/get_driver_phone`, {
+                          method: "POST",
+                          body: JSON.stringify({
+                            order_id: order.order_id
+                          }),
+                          headers: {
+                            "Content-Type": "application/json"
+                          }
+                        })
+                        if (!response.ok) {
+                          throw new Error(`Error fetching driver phone: ${response.statusText}`);
+                        }
+                    
+                        const data = await response.json();
+                    
+                        // Handle the response data (assuming the phone number is in data.phone_number)
+                        if (data.phone_number) {
+                          console.log("Driver Phone Number: ", data.phone_number);
+                          // Do something with the phone number, like display it in the UI
+                        } else {
+                          console.log("Driver phone number not found.");
+                        }
+                      } catch (error) {
+                        console.error("Error: ", error)
+                      }
+                    }
+
+                    await main()
+                    // navigation.navigate("TrackOrder", {orderId: order.id})
+                  }}
+                />
+              ))
+          ) : (
+            <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              {loading ? (
+                <Text style={{ fontFamily: 'Livvic_700Bold', fontSize: 16, textAlign: 'center' }}>
+                  Loading orders...
+                </Text>
+              ) : (
+                <Text style={{ fontFamily: 'Livvic_700Bold', fontSize: 16, textAlign: 'center' }}>
+                  No orders found.
+                </Text>
+              )}
+            </View>
+          )}
+
+
+          {/* {ordersData.map((order,index) => (
             <OrderCard
               key={index}
               orderNumber={order.id}
@@ -184,7 +379,7 @@ const OrdersScreen = ({ navigation }) => {
               }
               theme={theme}
             />
-          ))}
+          ))} */}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -271,7 +466,7 @@ const getStyles = (theme) =>
     restaurantLogo: {
       width: 40,
       height: 40,
-      borderRadius: 8,
+      borderRadius: 20,
     },
     orderDetails: {
       marginLeft: 10,

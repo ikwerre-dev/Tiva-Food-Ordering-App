@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,16 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ThemeContext } from '../context/AuthContext';
+import jwt_decode from 'jwt-decode'
 import { useFonts } from 'expo-font';
 import { Livvic_400Regular, Livvic_700Bold } from '@expo-google-fonts/livvic';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from '../config';
+import AddBalanceModal from './AddMoneyModal';
 
 const Transaction = ({ title, date, amount }) => {
   const { theme } = useContext(ThemeContext);
@@ -53,7 +58,7 @@ const Transaction = ({ title, date, amount }) => {
         styles.transactionAmount,
         { color: isPositive ? '#4CAF50' : '#FF5252' }
       ]}>
-        {amount}
+        N {parseFloat(amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
       </Text>
     </View>
   );
@@ -61,6 +66,157 @@ const Transaction = ({ title, date, amount }) => {
 
 const WalletScreen = () => {
   const { theme } = useContext(ThemeContext);
+  const [balance, setBalance] = useState("...")
+  const [modalVisible, setModalVisible] = useState(false)
+  const [loading, setloading] = useState(true)
+  const [transactions, setTransactions] = useState([])
+
+  const fetchData2 = async () => {
+    setloading(true)
+    try {
+      setBalance("...")
+      setTransactions([])
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        console.warn("No token found in storage");
+        return;
+      }
+
+      const decodedToken = jwt_decode(token);
+      if (!decodedToken || !decodedToken.userid) {
+        console.warn("Invalid token structure");
+        return;
+      }
+
+      const { userid } = decodedToken;
+
+      // Fetch User Balance
+      const balanceResponse = await fetch(`${BASE_URL}/fetch_balance`, {
+        method: "POST",
+        body: JSON.stringify({ user_id: userid }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!balanceResponse.ok) {
+        console.log("Failed to fetch balance");
+      } else {
+        const balanceData = await balanceResponse.json();
+        if (balanceData.status === 200) {
+          console.log("User balance: ", balanceData.balance);
+          setBalance(balanceData.balance);
+        } else {
+          console.log("Failed to retrieve balance: ", balanceData.message);
+        }
+      }
+
+      // Fetch All Transactions
+      const transactionsResponse = await fetch(`${BASE_URL}/transactions`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!transactionsResponse.ok) {
+        console.log("Failed to fetch transactions");
+      } else {
+        const transactionsData = await transactionsResponse.json();
+        if (transactionsData.status === 200) {
+          console.log("Transactions: ", transactionsData.transactions);
+          setTransactions(transactionsData.transactions);
+        } else {
+          console.log("Failed to retrieve transactions: ", transactionsData.message);
+        }
+      }
+
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    } finally{
+      setloading(false)
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setloading(true)
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) {
+          console.warn("No token found in storage");
+          return;
+        }
+  
+        const decodedToken = jwt_decode(token);
+        if (!decodedToken || !decodedToken.userid) {
+          console.warn("Invalid token structure");
+          return;
+        }
+  
+        const { userid } = decodedToken;
+  
+        // Fetch User Balance
+        const balanceResponse = await fetch(`${BASE_URL}/fetch_balance`, {
+          method: "POST",
+          body: JSON.stringify({ user_id: userid }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+  
+        if (!balanceResponse.ok) {
+          console.log("Failed to fetch balance");
+        } else {
+          const balanceData = await balanceResponse.json();
+          if (balanceData.status === 200) {
+            console.log("User balance: ", balanceData.balance);
+            setBalance(balanceData.balance);
+          } else {
+            console.log("Failed to retrieve balance: ", balanceData.message);
+          }
+        }
+  
+        // Fetch All Transactions
+        const transactionsResponse = await fetch(`${BASE_URL}/transactions`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+  
+        if (!transactionsResponse.ok) {
+          console.log("Failed to fetch transactions");
+        } else {
+          const transactionsData = await transactionsResponse.json();
+          if (transactionsData.status === 200) {
+            console.log("Transactions: ", transactionsData.transactions);
+            setTransactions(transactionsData.transactions);
+          } else {
+            console.log("Failed to retrieve transactions: ", transactionsData.message);
+          }
+        }
+  
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      } finally{
+        setloading(false)
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  const onSuccessAdd = async (add_amount) => {
+    try {
+      const main = parseFloat(balance) + parseFloat(add_amount)
+      setBalance(main)
+    } catch (error) {
+      console.log("Error: ", error)
+    }
+  }
+  
+  
   
   let [fontsLoaded] = useFonts({
     Livvic_400Regular,
@@ -140,7 +296,7 @@ const WalletScreen = () => {
     transactionsTitle: {
       fontSize: 20,
       fontFamily: 'Livvic_700Bold',
-      marginBottom: 10,
+      marginBottom: 20,
       color: theme === 'light' ? '#000' : '#fff',
     },
     monthText: {
@@ -153,45 +309,84 @@ const WalletScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.container}>
+      <AddBalanceModal 
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSuccess={(amount) => {
+          console.log("Successfully added to balance")
+          onSuccessAdd(amount)
+        }}
+        />
+      <ScrollView style={styles.container} refreshControl={<RefreshControl onRefresh={() => {
+
+        fetchData2()
+      }} refreshing={loading}/>}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Wallet</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.debitText}>Debit.</Text>
+          <TouchableOpacity style={[styles.debitText, {
+            backgroundColor: theme === 'light' ? 'white' : '#000066',
+            paddingVertical: 5,
+            width: 30,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 30,
+            borderWidth: 1,
+            borderColor: 'lightblue'
+          }]}
+          onPress={() => setModalVisible(true)}
+          >
+            <Icon name='plus' size={20} color={theme === 'light' ? '#000066' : 'white'}/>
+          </TouchableOpacity>
           <Text style={styles.bankName}>TIVA-BANK</Text>
           <Text style={styles.cardNumber}>5355 0348 5945 5045</Text>
           <View style={styles.cardFooter}>
             <View>
               <Text style={styles.balanceText}>Total Balance</Text>
-              <Text style={styles.balanceAmount}>N 14,000</Text>
+              <Text style={styles.balanceAmount}>N {parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</Text>
             </View>
             <View>
               <Text style={styles.validThru}>VALID THRU</Text>
-              <Text style={styles.balanceText}>12/24</Text>
+              <Text style={styles.balanceText}>NAN</Text>
             </View>
           </View>
         </View>
 
         <Text style={styles.transactionsTitle}>Transactions</Text>
-        <Text style={styles.monthText}>June 2024</Text>
 
-        <Transaction
-          title="Tip to Rider"
-          date="Friday 7th June, 2024"
-          amount="-N400"
-        />
-        <Transaction
-          title="Order Purchase 1 portion of Catfish"
-          date="Friday 7th June, 2024"
-          amount="-N6800"
-        />
-        <Transaction
-          title="Wallet Top-Up"
-          date="Friday 7th June, 2024"
-          amount="+N14000"
-        />
+        {transactions.length > 0 && !loading ? (
+          transactions.map((transaction, index) => (
+            <Transaction 
+              key={index} 
+              title={transaction.reason} 
+              date={`${transaction.date} ${transaction.time}`} 
+              amount={`${transaction.type === 'credit' ? '+' : '-'}${transaction.amount}`} 
+            />
+          ))
+        ) : transactions.length === 0 && !loading ? (
+          <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{
+              fontFamily: "Livvic_700Bold",
+              fontSize: 16,
+              textAlign: 'center',
+              color: '#666',
+            }}>
+              No transactions found.
+            </Text>
+          </View>
+        ) : (
+          <View style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={{
+              fontFamily: "Livvic_700Bold",
+              fontSize: 16,
+              textAlign: 'center',
+              color: theme === 'light' ? 'black':'white'
+            }}>Loading transactions...</Text>
+          </View>
+        )}
+
       </ScrollView>
     </SafeAreaView>
   );

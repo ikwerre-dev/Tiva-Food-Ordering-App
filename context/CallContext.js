@@ -1,279 +1,268 @@
-import React, { createContext, useState, useContext, useCallback, useEffect, useRef } from "react";
-import * as Haptics from "expo-haptics";
-import { Audio } from 'expo-av';
-import * as FileSystem from 'expo-file-system';
+import React, { useState, useEffect, createContext, useContext } from 'react';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, Vibration } from 'react-native';
+import { io } from 'socket.io-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import WebView from 'react-native-webview';
+import Toast from 'react-native-toast-message';
 
-const CallContext = createContext();
+export const SocketContext = createContext();
 
-// Dummy user data
-const dummyUser = {
-  userId: 'user_123',
-  username: 'user_123',
-  password: 'password123', // In a real app, never store passwords in plain text
-  fullname: 'Robinson Honour',
-  role: 'driver'
-};
+export const SocketProvider = ({ children }) => {
+  const [socketNew, setSocketNew] = useState(null);
+  const [email2, setemail2] = useState('');
+  const [callDetails, setCallDetails] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isWebViewVisible, setIsWebViewVisible] = useState(false);
 
-export const CallProvider = ({ children, navigation }) => {
-  const [callStatus, setCallStatus] = useState("idle");
-  const [currentCall, setCurrentCall] = useState(null);
-  const [user, setUser] = useState(null);
-  const ws = useRef(null);
-  const [audioStatus, setAudioStatus] = useState(null);
-  const audioRecording = useRef(null);
-  const audioPlayer = useRef(null);
+  const getDeets = async () => {
+    console.log('Getting details');
+    try {
+      const storedEmail = await AsyncStorage.getItem('email');
+      setemail2(storedEmail);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   useEffect(() => {
-    initializeWebSocket();
-    return () => {
-      if (ws.current) {
-        ws.current.close();
-      }
-    };
+    getDeets();
   }, []);
 
-  const initializeWebSocket = () => {
-    ws.current = new WebSocket('ws://192.168.1.115:8080');
-    
-    ws.current.onopen = () => {
-      console.log('WebSocket connected');
-      login(dummyUser.username, dummyUser.password);
-    };
-
-    ws.current.onmessage = handleWebSocketMessage;
-
-    ws.current.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
-    ws.current.onclose = () => {
-      console.log('WebSocket disconnected');
-      // Implement reconnection logic here
-    };
-  };
-
-  const handleWebSocketMessage = async (event) => {
-    const data = JSON.parse(event.data);
-    console.log('Received WebSocket message:', data);
-
-    switch (data.type) {
-      case 'login-success':
-        handleLoginSuccess(data);
-        break;
-      case 'login-failed':
-        handleLoginFailed(data);
-        break;
-      case 'incoming-call':
-        handleIncomingCall(data);
-        break;
-      case 'call-answer':
-        handleCallAnswer(data);
-        break;
-      case 'call-end':
-        handleCallEnd(data);
-        break;
-      case 'audio-data':
-        await handleAudioData(data);
-        break;
-      case 'call-request':
-        handleIncomingCall(data);
-        break;
-    }
-  };
-
-  const handleLoginSuccess = (data) => {
-    setUser({
-      userId: data.userId,
-      username: data.username,
-      fullname: data.fullname,
-      role: data.role
-    });
-    console.log('Login successful:', data);
-  };
-
-  const handleLoginFailed = (data) => {
-    console.error('Login failed:', data.message);
-    // Implement error handling, e.g., show an alert to the user
-  };
-
-  const handleIncomingCall = (data) => {
-    console.log('Incoming call:', data);
-    setCurrentCall({
-      from: data.from,
-      username: data.username,
-      fullname: data.fullname,
-      role: data.role,
-      status: 'incoming'
-    });
-    setCallStatus("incoming");
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-  };
-
-  const handleCallAnswer = (data) => {
-    if (data.answer) {
-      setCallStatus("active");
-    } else {
-      handleHangUp();
-    }
-  };
-
-  const handleCallEnd = () => {
-    handleHangUp();
-  };
-
-  const login = useCallback((username, password) => {
-    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      ws.current.send(JSON.stringify({
-        type: 'login',
-        username,
-        password
-      }));
-    } else {
-      console.error('WebSocket is not connected');
-    }
-  }, []);
-
-  const sendCallRequest = useCallback((targetUserId) => {
-    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      console.log('Sending call request to:', targetUserId);
-      ws.current.send(JSON.stringify({
-        type: 'call-request',
-        targetUserId,
-        from: user.userId,
-        username: user.username,
-        fullname: user.fullname,
-        role: user.role
-      }));
-      setCurrentCall({ targetUserId, status: 'calling' });
-      setCallStatus('calling');
-    } else {
-      console.error('WebSocket is not connected');
-    }
-  }, [user]);
-
-  const startCall = useCallback((targetUserId) => {
-    sendCallRequest(targetUserId);
-    const callData = {
-      targetUserId,
-      userId: user.userId,
-      username: user.username,
-      fullname: user.fullname,
-      role: user.role
-    };
-    navigation.navigate('CallScreen', { callData });
-  }, [user, navigation, sendCallRequest]);
-
-  const acceptCall = useCallback(async () => {
-    if (callStatus === "incoming" && currentCall) {
-      ws.current.send(JSON.stringify({
-        type: 'call-response',
-        targetUserId: currentCall.from,
-        answer: true
-      }));
-      setCallStatus("active");
-      await startAudioRecording();
-    }
-  }, [callStatus, currentCall]);
-
-  const declineCall = useCallback(() => {
-    if (callStatus === "incoming") {
-      ws.current.send(JSON.stringify({
-        type: 'call-response',
-        targetUserId: currentCall.from,
-        answer: false
-      }));
-      setCallStatus("idle");
-      setCurrentCall(null);
-    }
-  }, [callStatus, currentCall]);
-
-  const handleHangUp = useCallback(async () => {
-    if (currentCall) {
-      ws.current.send(JSON.stringify({
-        type: 'call-end',
-        targetUserId: currentCall.from || currentCall.targetUserId
-      }));
-    }
-    setCallStatus("idle");
-    setCurrentCall(null);
-    await stopAudioRecording();
-    if (audioPlayer.current) {
-      await audioPlayer.current.unloadAsync();
-    }
-  }, [currentCall]);
-
-  const startAudioRecording = async () => {
-    try {
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
+  useEffect(() => {
+    if (email2 !== '') {
+      const newSocket = io('wss://foodapp-backend-fefy.onrender.com', {
+        query: { email2 },
+        reconnection: true,
+        reconnectionAttempts: 20,
+        reconnectionDelay: 3000,
+        pingTimeout: 2147483647,
+        pingInterval: 25000,
       });
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      audioRecording.current = recording;
-      setAudioStatus('recording');
-    } catch (err) {
-      console.error('Failed to start recording', err);
+      setSocketNew(newSocket);
+      newSocket.connect();
+
+      newSocket.on('connect', () => {
+        console.log('Connected to server from app with socket context');
+        newSocket.emit('register_user', { email: email2 });
+      });
+
+      newSocket.on('incomingCall', (data) => {
+        console.log('Incoming call', data);
+
+        const startVibration = () => {
+          const vibrationInterval = setInterval(() => {
+            Vibration.vibrate(500); // Vibrate for 500ms
+          }, 1000); // Interval of 1 second
+
+          setTimeout(() => {
+            clearInterval(vibrationInterval); // Stop vibration after 10 seconds
+          }, 10000); // 10 seconds
+        };
+
+        startVibration();
+        setCallDetails(data);
+        setIsModalVisible(true);
+      });
+
+      newSocket.on('error', (data) => {
+        Toast.show({
+          text1: 'Error connecting to server',
+          text2: 'Please check your network connection',
+          position: 'top',
+          visibilityTime: 3000,
+          autoHide: true,
+        });
+        console.log('An error occurred:', data);
+      });
+
+      newSocket.on('connect_timeout', (timeout) => {
+        console.error('Connection Timeout:', timeout);
+      });
+
+      newSocket.on('connect_error', (error) => {
+        console.log('Connection error - User in socket context:', error);
+      });
+
+      return () => {
+        newSocket.disconnect();
+      };
     }
+  }, [email2]);
+
+  const handleRejectCall = () => {
+    setIsModalVisible(false);
+    setCallDetails(null);
   };
 
-  const stopAudioRecording = async () => {
-    if (audioRecording.current) {
-      await audioRecording.current.stopAndUnloadAsync();
-      const uri = audioRecording.current.getURI();
-      audioRecording.current = null;
-      setAudioStatus('stopped');
-      return uri;
-    }
+  const handleAcceptCall = () => {
+    setIsModalVisible(false);
+    setIsWebViewVisible(true);
   };
 
-  const sendAudioData = useCallback(async () => {
-    if (audioStatus === 'recording' && currentCall) {
-      const uri = await stopAudioRecording();
-      const base64Audio = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
-      ws.current.send(JSON.stringify({
-        type: 'audio-data',
-        targetUserId: currentCall.from || currentCall.targetUserId,
-        data: base64Audio
-      }));
-      await startAudioRecording();
-    }
-  }, [audioStatus, currentCall]);
-
-  const handleAudioData = async (data) => {
-    if (audioPlayer.current) {
-      await audioPlayer.current.unloadAsync();
-    }
-    const { sound } = await Audio.Sound.createAsync({ uri: `data:audio/wav;base64,${data.data}` });
-    audioPlayer.current = sound;
-    await audioPlayer.current.playAsync();
+  const handleCloseWebView = () => {
+    setIsWebViewVisible(false);
+    setCallDetails(null);
   };
-
-  const getUserCredentials = useCallback(() => {
-    return user ? { userId: user.userId, username: user.username, password: dummyUser.password } : null;
-  }, [user]);
 
   return (
-    <CallContext.Provider
-      value={{
-        callStatus,
-        currentCall,
-        user,
-        acceptCall,
-        declineCall,
-        handleHangUp,
-        startCall,
-        sendAudioData,
-        sendCallRequest,
-        getUserCredentials,
-      }}
-    >
+    <SocketContext.Provider value={{ socket: socketNew, setemail2 }}>
       {children}
-    </CallContext.Provider>
+
+      {callDetails && (
+        <Modal
+          visible={isModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={styles.container}>
+            <View style={styles.subcontainer}>
+              <View>
+                <Text style={styles.text}>Incoming call</Text>
+                <Text style={styles.subtext}>{callDetails.callId || 'Unknown'}</Text>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={[styles.button, styles.declineButton]}
+                  onPress={handleRejectCall}
+                >
+                  <Icon name="times" size={20} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, styles.acceptButton]}
+                  onPress={handleAcceptCall}
+                >
+                  <Icon name="phone" size={20} color="white" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
+
+      {isWebViewVisible && (
+        <Modal
+          visible={isWebViewVisible}
+          animationType="slide"
+          onRequestClose={handleCloseWebView}
+        >
+          <WebView
+            source={{ uri: callDetails?.callUrl || 'https://example.com' }}
+            style={{ flex: 1 }}
+          />
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={handleCloseWebView}
+          >
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </Modal>
+      )}
+    </SocketContext.Provider>
   );
 };
 
-export const useCall = () => useContext(CallContext);
+export const useCall = () => useContext(SocketContext);
 
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalSubtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  rejectButton: {
+    backgroundColor: 'red',
+  },
+  acceptButton: {
+    backgroundColor: 'green',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 50,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  container: {
+    position: "absolute",
+    top: 50,
+    left: 0,
+    right: 0,
+    marginHorizontal: 30,
+  },
+  subcontainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    padding: 12,
+    paddingHorizontal: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderRadius: 30,
+  },
+  text: {
+    color: "white",
+    fontSize: 16,
+    fontFamily: "Livvic_700Bold",
+    paddingLeft: 10,
+  },
+  subtext: {
+    color: "white",
+    fontSize: 13,
+    fontFamily: "Livvic_400Regular",
+    paddingLeft: 10,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  button: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  declineButton: {
+    backgroundColor: "red",
+  },
+  acceptButton: {
+    backgroundColor: "green",
+  },
+});

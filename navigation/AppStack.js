@@ -30,6 +30,8 @@ import {
 } from "@expo-google-fonts/poppins";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
 import AppLoading from "../components/Loader";
+import Toast from "react-native-toast-message";
+import DeliveryAddressScreen from "../screens/DeliveryAddressScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -150,7 +152,7 @@ function TabNavigator() {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, freezeOnBlur: false }}
         listeners={{
           tabPress: () =>
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
@@ -212,7 +214,7 @@ export default function AppStack() {
       <Stack.Screen
         name="MainTabs"
         component={TabNavigator}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, freezeOnBlur: false }}
       />
       <Stack.Screen
         name="Favorites"
@@ -247,6 +249,11 @@ export default function AppStack() {
       <Stack.Screen
         name="PaymentMethods"
         component={PaymentMethod}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DeliverySet"
+        component={DeliveryAddressScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

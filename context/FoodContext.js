@@ -27,12 +27,12 @@ export const FoodProvider = ({ children }) => {
   const addToCart = (item) => {
     setCart((prevCart) => {
       // Check if the item with the same id already exists
-      const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
+      const existingItem = prevCart.find((cartItem) => cartItem.item_id === item.item_id);
 
       if (existingItem) {
         // If it exists, update the quantity and merge the selectedAddOns
         return prevCart.map((cartItem) =>
-          cartItem.id === item.id
+          cartItem.item_id === item.item_id
             ? {
                 ...cartItem,
                 quantity: cartItem.quantity + item.quantity,
@@ -51,7 +51,7 @@ export const FoodProvider = ({ children }) => {
   };
 
   const removeFromCart = (itemId) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== itemId));
+    setCart((prevCart) => prevCart.filter((item) => item.item_id !== itemId));
   };
 
   const clearCart = () => {
@@ -61,7 +61,7 @@ export const FoodProvider = ({ children }) => {
   const updateItemInCart = (itemId, updates) => {
     setCart((prevCart) =>
       prevCart.map((item) =>
-        item.id === itemId ? { ...item, ...updates } : item
+        item.item_id === itemId ? { ...item, ...updates } : item
       )
     );
   };
@@ -77,6 +77,7 @@ export const FoodProvider = ({ children }) => {
   const loadCartFromStorage = async () => {
     try {
       const savedCart = await AsyncStorage.getItem('cart');
+      console.log("SavedContext: ", JSON.parse(savedCart))
       if (savedCart !== null) {
         setCart(JSON.parse(savedCart));
       }

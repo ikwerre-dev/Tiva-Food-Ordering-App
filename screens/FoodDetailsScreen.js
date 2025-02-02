@@ -37,6 +37,7 @@ export default function FoodDetailsScreen({ navigation, route }) {
   const dragOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    console.log("Restaurant: ", restaurant)
     setItem(restaurant);
   }, []);
 
@@ -158,14 +159,9 @@ export default function FoodDetailsScreen({ navigation, route }) {
 
           <View style={styles.ratingContainer}>
             <Icon name="star"   fill="#FFD700" color="#FFD700" size={16} />
-            <Text style={styles.rating}>{item.rating}</Text>
             <Text style={styles.reviews}>
               {" • "}
-              {item.delivery && item.delivery.isFree
-                ? "Free delivery"
-                : "Paid delivery"}
-              {" • "}
-              {item.delivery && item.delivery.time}
+              {"Free Delviery"}
             </Text>
           </View>
           <Text style={styles.description}>{item.description}</Text>

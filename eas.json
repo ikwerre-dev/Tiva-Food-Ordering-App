@@ -3,13 +3,21 @@
     "internal": {
       "distribution": "internal",
       "android": {
-        "buildType": "app-bundle"  
+        "buildType": "apk"  
       }
     },
     "development": {
+      "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "buildType": "apk"  
+        "buildType": "apk",
+        "developmentClient": true,
+        "distribution": "internal"
+      },
+      "ios": {
+        "developmentClient": true,
+        "simulator": false,
+        "distribution": "internal"
       }
     },
     "production": {

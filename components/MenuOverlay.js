@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,11 +14,13 @@ import {
   Poppins_400Regular,
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
+import jwt_decode from 'jwt-decode'
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
 import AppLoading from '../components/Loader';
 import { AuthContext, ThemeContext } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { ScrollView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -113,6 +115,8 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const { logout } = useContext(AuthContext);
+  const [name, setname] = useState("")
+  const [email, setemail] = useState("")
 
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,
@@ -120,6 +124,22 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
     Livvic_400Regular,
     Livvic_700Bold,
   });
+  
+  useEffect(() => {
+    const main = async () => {
+      try{
+        const token = await AsyncStorage.getItem("token")
+        const decodedToken = await jwt_decode(token)
+        const {fullname, email} = decodedToken
+        setname(fullname)
+        setemail(email)
+      }
+      catch (error){
+        console.error("Error: ", error)
+      }
+    }
+    main()
+  }, [])
 
   if (!fontsLoaded) {
     return <AppLoading />;
@@ -146,8 +166,6 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
     { icon: <Icon name="user" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "My Profile", screen: "Profile" },
     { icon: <Icon name="credit-card" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "Payment Methods", screen: "PaymentMethods" },
     { icon: <Icon name="bell" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "Notification", screen: "Notification" },
-    { icon: <Icon name="heart" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "My Favorites", screen: "Favorites" },
-    { icon: <Icon name="map-pin" color={theme === "light" ? "#000" : "#fff"} size={24} />, title: "Delivery Address", screen: "DeliveryAddress" },
     {
       icon: theme === "light" ? <Icon name="moon" color={theme === "light" ? "#000" : "#fff"} size={24} /> : <Icon name="sun" color={theme === "light" ? "#000" : "#fff"} size={24} />,
       title: `${theme === "light" ? "Dark" : "Light"} Mode`,
@@ -177,8 +195,8 @@ export default function MenuOverlay({ isOpen, onClose, translateX }) {
               style={styles.profileImage}
             />
           </View>
-          <Text style={styles.profileName}>Robinson Honour</Text>
-          <Text style={styles.profileEmail}>investorhonour@gmail.com</Text>
+          <Text style={styles.profileName}>{name !== "" ? name : "..."}</Text>
+          <Text style={styles.profileEmail}>{email !== "" ? email : "..."}</Text>
         </View>
 
         <ScrollView>

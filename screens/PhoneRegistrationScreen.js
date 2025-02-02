@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,11 +8,41 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AuthContext } from '../context/AuthContext';
 
-export default function PhoneRegistrationScreen({ navigation }) {
+export default function PhoneRegistrationScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
+  const route = useRoute()
+  const {email, password, fullName} = route.params;
+  const [loading, setloading] = useState(false)
+  const navigation = useNavigation()
+  const [error, setError] = useState("")
+  const {verifyEmail} = useContext(AuthContext)
+
+  const verifyNow = async () => {
+    try {
+      setloading(true)
+      const userData = JSON.stringify({
+        email: email
+      })
+      const main = await verifyEmail(userData)
+      const {otp, status, message} = main
+      if (status === 201){
+        navigation.navigate('VerificationCode', {email: email, password: password, fullName: fullName, otp: otp, phoneNumber: phoneNumber})
+      } else{
+        setError(message)
+      }
+
+
+    } catch (error) {
+      console.error('error: ', error)
+    } finally{
+      setloading(false)
+    }
+  }
 
   return (
     <KeyboardAvoidingView
@@ -30,10 +61,17 @@ export default function PhoneRegistrationScreen({ navigation }) {
         <Text style={styles.subtitle}>
           Enter your phone number to verify your account
         </Text>
+        {error !== "" && <Text style={{
+          color: 'red',
+          fontFamily: "Livvic_700Bold",
+          fontSize: 17,
+          paddingVertical: 10,
+          textAlign: 'center'
+        }}>{error}</Text>}
 
         <View style={styles.phoneContainer}>
           <View style={styles.countryCode}>
-            <Text style={styles.countryCodeText}>🇮🇪 +353</Text>
+            <Text style={styles.countryCodeText}>🇮🇪 +234</Text>
           </View>
           <TextInput
             style={styles.phoneInput}
@@ -47,9 +85,14 @@ export default function PhoneRegistrationScreen({ navigation }) {
 
         <TouchableOpacity
           style={styles.continueButton}
-          onPress={() => navigation.navigate('VerificationCode')}
+          onPress={verifyNow}
+          disabled={loading}
         >
-          <Text style={styles.continueButtonText}>Continue</Text>
+          {loading ? (
+            <ActivityIndicator color='white' size={20}/>
+          ) : (
+            <Text style={styles.continueButtonText}>Continue</Text>
+          )}
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

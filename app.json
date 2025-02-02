@@ -13,17 +13,20 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.codewithhonour.foodapp"
+      "bundleIdentifier": "com.codewithhonour.tivafoodapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.codewithhonour.foodapp"
+      "package": "com.codewithhonour.foodapp",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,10 +40,12 @@
         }
       ]
     ],
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "extra": {
       "eas": {
-        "projectId": "b25c5782-50a9-4af9-ac28-e0bd22e77049"
+        "projectId": "28c6deba-ca75-4435-afa6-717d6f7bbaa7"
       }
     }
   }

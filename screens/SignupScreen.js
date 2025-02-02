@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   View,
@@ -11,11 +12,27 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // You can choose other icon sets like FontAwesome or MaterialIcons
 
-export default function SignUpScreen({ navigation }) {
+export default function SignUpScreen() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("")
+  const navigation = useNavigation()
+
+
+  const navToPhoneReg = async () => {
+    try {
+      if (!fullName || !email || !password){
+        setError("All values required")
+        return
+      }
+
+      navigation.navigate('PhoneRegistration', { email: email, password: password, fullName: fullName})
+    } catch (error) {
+      console.error("Error: ", error)
+    }
+  }
 
   return (
     <KeyboardAvoidingView
@@ -35,6 +52,13 @@ export default function SignUpScreen({ navigation }) {
       
       <View style={styles.content}>
         <Text style={styles.title}>Sign Up</Text>
+        {error !== "" && <Text style={{
+          color: 'red',
+          fontFamily: "Livvic_700Bold",
+          fontSize: 17,
+          textAlign: 'center',
+          paddingVertical: 10
+        }}>{error}</Text>}
         
         <View style={styles.inputContainer}>
           <TextInput
@@ -78,7 +102,7 @@ export default function SignUpScreen({ navigation }) {
 
         <TouchableOpacity
           style={styles.signUpButton}
-          onPress={() => navigation.navigate('PhoneRegistration')}
+          onPress={navToPhoneReg}
         >
           <Text style={styles.signUpButtonText}>SIGN UP</Text>
         </TouchableOpacity>

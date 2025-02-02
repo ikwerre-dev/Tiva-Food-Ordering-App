@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,8 +14,10 @@ import { useFonts } from "expo-font";
 import { Livvic_400Regular, Livvic_700Bold } from "@expo-google-fonts/livvic";
 import AppLoading from "../components/Loader";
 import { ThemeContext } from "../context/AuthContext";
+import * as Location from 'expo-location'
 import { ScrollView } from "react-native";
 import trackerImage from "../assets/tracker.png";
+import { useCall } from "../context/CallContext";
 const getStyles = (theme) => ({
   background: {
     flex: 1,
@@ -254,6 +256,7 @@ const StatusStep = ({
 const TrackOrderScreen = ({ navigation }) => {
   const { theme } = useContext(ThemeContext);
   const styles = getStyles(theme);
+  const {socket} = useCall()
   const [orderStatus, setOrderStatus] = React.useState(3); // 0: none, 1: confirmed, 2: pickup, 3: in progress, 4: delivered
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -312,6 +315,8 @@ const TrackOrderScreen = ({ navigation }) => {
         return "Pending";
     }
   };
+
+
 
   const getStatusColor = () => {
     if (orderStatus === 4) return "#22C55E";
